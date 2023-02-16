@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import org.springframework.http.HttpMethod;
-import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.dao.FilmRepository;
 import ru.yandex.practicum.filmorate.model.Film;
 import org.slf4j.Logger;
