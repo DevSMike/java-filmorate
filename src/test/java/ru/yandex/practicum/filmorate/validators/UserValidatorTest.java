@@ -107,7 +107,5 @@ class UserValidatorTest {
         ValidationException e = assertThrows(ValidationException.class
                 ,() -> UserValidator.validate(user2, users, HttpMethod.PUT), "Exceptions does not throw");
         assertEquals(e.getMessage(),"Id is incorrect", "Messages are different");
-
     }
-
 }
