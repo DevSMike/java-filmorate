@@ -45,8 +45,12 @@ class FilmValidatorTest {
     private final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
     @Test
     public void shouldBeFilmWhenDataIsCorrect() {
-        Film film = new Film("Avatar", "Film!",
-                LocalDate.of(2005, 11, 12),250 );
+        Film film = Film.builder()
+                .name("Avatar")
+                .description("Cool film")
+                .releaseDate(LocalDate.of(2005, 3, 25))
+                .duration(250)
+                .build();
         Map<Integer, Film> films = new HashMap<>();
 
         assertDoesNotThrow(() ->  FilmValidator.validate(film, films, HttpMethod.POST), "Exception throws");
@@ -54,8 +58,12 @@ class FilmValidatorTest {
 
     @Test
     public void shouldThrowExceptionWhileEmptyName() {
-        Film film = new Film("", "Film!",
-                LocalDate.of(2005, 11, 12),250 );
+        Film film = Film.builder()
+                .name("")
+                .description("Cool film")
+                .releaseDate(LocalDate.of(2005, 3, 25))
+                .duration(-250)
+                .build();
         Map<Integer, Film> films = new HashMap<>();
 
         ValidationException e = assertThrows(ValidationException.class
@@ -65,10 +73,15 @@ class FilmValidatorTest {
 
     @Test
     public void shouldThrowExceptionWhileBiggerDescription() {
-        Film film = new Film("Avatar", "Пятеро друзей ( комик-группа «Шарло»), приезжают в город Бризуль. " +
-                "Здесь они хотят разыскать господина Огюста Куглова, который задолжал им деньги, а именно 20 миллионов." +
-                " о Куглов, который за время «своего отсутствия», стал кандидатом Коломбани.",
-                LocalDate.of(2005, 11, 12),250 );
+        Film film = Film.builder()
+                .name("Avatar")
+                .description("Пятеро друзей ( комик-группа «Шарло»), приезжают в город Бризуль." +
+                        "Здесь они хотят разыскать господина Огюста Куглова," +
+                        " который задолжал им деньги, а именно 20 миллионов." +
+                        " о Куглов, который за время «своего отсутствия», стал кандидатом Коломбани.")
+                .releaseDate(LocalDate.of(2005, 3, 25))
+                .duration(250)
+                .build();
         Map<Integer, Film> films = new HashMap<>();
 
         ValidationException e = assertThrows(ValidationException.class
@@ -78,8 +91,12 @@ class FilmValidatorTest {
 
     @Test
     public void shouldThrowExceptionWhileReleaseDateIsBeforeMin() {
-        Film film = new Film("Avatar", "Film!",
-                LocalDate.of(1890, 3, 25),250 );
+        Film film = Film.builder()
+                .name("Avatar")
+                .description("Cool film")
+                .releaseDate(LocalDate.of(1890, 3, 25))
+                .duration(250)
+                .build();
         Map<Integer, Film> films = new HashMap<>();
 
         ValidationException e = assertThrows(ValidationException.class
@@ -90,8 +107,12 @@ class FilmValidatorTest {
 
     @Test
     public void shouldBeThrowExceptionWhileDurationIsNegative() {
-        Film film = new Film("Avatar", "Film!",
-                LocalDate.of(2005, 3, 25),-250 );
+        Film film = Film.builder()
+                .name("Avatar")
+                .description("Cool film")
+                .releaseDate(LocalDate.of(2005, 3, 25))
+                .duration(-250)
+                .build();
         Map<Integer, Film> films = new HashMap<>();
 
         ValidationException e = assertThrows(ValidationException.class
@@ -101,8 +122,12 @@ class FilmValidatorTest {
 
     @Test
     public void shouldBeEqualsObjectsAfterUpdateIfValidated() {
-        Film film = new Film("Avatar", "Film!",
-                LocalDate.of(2005, 3, 25),250 );
+        Film film = Film.builder()
+                .name("Avatar")
+                .description("Cool film")
+                .releaseDate(LocalDate.of(2005, 3, 25))
+                .duration(250)
+                .build();
         Map<Integer, Film> films = new HashMap<>();
 
         FilmValidator.validate(film, films, HttpMethod.POST);
@@ -125,8 +150,12 @@ class FilmValidatorTest {
 
     @Test
     public void shouldBeExceptionAfterUnknownUpdate() {
-        Film film = new Film("Avatar", "Film!",
-                LocalDate.of(2005, 3, 25),250 );
+        Film film = Film.builder()
+                .name("Avatar")
+                .description("Cool film")
+                .releaseDate(LocalDate.of(2005, 3, 25))
+                .duration(250)
+                .build();
         Map<Integer, Film> films = new HashMap<>();
 
         FilmValidator.validate(film, films, HttpMethod.POST);

@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -20,7 +19,11 @@ class UserValidatorTest {
 
     @Test
     public void shouldBeUserWhenDataIsCorrect() {
-        User user = new User("mrmike@mail.ru", "mike123", LocalDate.of(2002, 6, 18));
+        User user = User.builder()
+                .email("mrmike@mail.ru")
+                .login("mike123")
+                .birthday(LocalDate.of(2002,6,18))
+                .build();
         Map<Integer, User> users= new HashMap<>();
 
         assertDoesNotThrow(() ->  UserValidator.validate(user, users, HttpMethod.POST), "Exception throws");
@@ -28,7 +31,11 @@ class UserValidatorTest {
 
     @Test
     public void shouldThrowExceptionWhileIncorrectLogin() {
-        User user = new User("mrmike@mail.ru", "mike mike", LocalDate.of(2002, 6, 18));
+        User user = User.builder()
+                .email("mrmike@mail.ru")
+                .login("mi ke")
+                .birthday(LocalDate.of(2002,6,18))
+                .build();
         Map<Integer, User> users= new HashMap<>();
 
         ValidationException e = assertThrows(ValidationException.class
@@ -38,7 +45,11 @@ class UserValidatorTest {
 
     @Test
     public void shouldThrowExceptionWhileIncorrectBirthday() {
-        User user = new User("mrmike@mail.ru", "mike", LocalDate.of(2042, 6, 18));
+        User user = User.builder()
+                .email("mrmike@mail.ru")
+                .login("mike")
+                .birthday(LocalDate.of(2052,6,18))
+                .build();
         Map<Integer, User> users= new HashMap<>();
 
         ValidationException e = assertThrows(ValidationException.class
@@ -48,7 +59,11 @@ class UserValidatorTest {
 
     @Test
     public void shouldThrowExceptionWhileIncorrectEmail() {
-        User user = new User("mrmike.mai.ru", "mike", LocalDate.of(2002, 6, 18));
+        User user = User.builder()
+                .email("mrmike.cmail.ru")
+                .login("mike")
+                .birthday(LocalDate.of(2002,6,18))
+                .build();
         Map<Integer, User> users= new HashMap<>();
 
         ValidationException e = assertThrows(ValidationException.class
@@ -58,7 +73,11 @@ class UserValidatorTest {
 
     @Test
     public void shouldBeNameEqualsLoginWhileNameIsEmpty() {
-        User user = new User("mrmike@mail.ru", "mike", LocalDate.of(2002, 6, 18));
+        User user = User.builder()
+                .email("mrmike@mail.ru")
+                .login("mike")
+                .birthday(LocalDate.of(2002,6,18))
+                .build();
         Map<Integer, User> users= new HashMap<>();
 
         UserValidator.validate(user, users, HttpMethod.POST);
@@ -68,7 +87,11 @@ class UserValidatorTest {
 
     @Test
     public void shouldBeEqualsObjectsAfterUpdateIfValidated() {
-        User user = new User("mrmike@mail.ru", "mike", LocalDate.of(2002, 6, 18));
+        User user = User.builder()
+                .email("mrmike@mail.ru")
+                .login("mike")
+                .birthday(LocalDate.of(2002,6,18))
+                .build();
         Map<Integer, User> users= new HashMap<>();
 
         UserValidator.validate(user, users, HttpMethod.POST);
@@ -90,7 +113,11 @@ class UserValidatorTest {
 
     @Test
     public void shouldBeExceptionAfterUnknownUpdate() {
-        User user = new User("mrmike@mail.ru", "mike", LocalDate.of(2002, 6, 18));
+        User user = User.builder()
+                .email("mrmike@mail.ru")
+                .login("mike")
+                .birthday(LocalDate.of(2002,6,18))
+                .build();
         Map<Integer, User> users= new HashMap<>();
 
         UserValidator.validate(user, users, HttpMethod.POST);
