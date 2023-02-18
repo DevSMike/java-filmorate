@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.validators.FilmValidator;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -15,11 +16,11 @@ import java.util.List;
 @RequestMapping("/films")
 public class FilmController {
 
-    private final FilmRepository repository = new FilmRepository();
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
+    private final FilmRepository repository = new FilmRepository();
 
     @PostMapping()
-    public Film addFilm(@RequestBody Film film) {
+    public Film addFilm(@Valid @RequestBody Film film) {
         FilmValidator.validate(film, repository.getAll(), HttpMethod.POST);
         log.info("object " + film + " passed validation. return object");
         repository.add(film);
@@ -27,7 +28,7 @@ public class FilmController {
     }
 
     @PutMapping()
-    public Film updateFilm(@RequestBody Film film) {
+    public Film updateFilm(@Valid @RequestBody Film film) {
         FilmValidator.validate(film, repository.getAll(), HttpMethod.PUT);
         log.info("object " + film + " passed validation. update and returns object");
         repository.update(film);
