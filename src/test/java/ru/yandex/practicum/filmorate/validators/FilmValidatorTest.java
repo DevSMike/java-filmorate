@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.testng.Assert.assertEquals;
 
 class LocalDateAdapter extends TypeAdapter<LocalDate> {
+    
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
@@ -43,6 +44,7 @@ class LocalDateAdapter extends TypeAdapter<LocalDate> {
 class FilmValidatorTest {
 
     private final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+    
     @Test
     public void shouldBeFilmWhenDataIsCorrect() {
         Film film = Film.builder()
