@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.testng.Assert.assertEquals;
 
 class UserValidatorTest {
+    
     private final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
 
     @Test
@@ -82,7 +83,6 @@ class UserValidatorTest {
 
         UserValidator.validate(user, users, HttpMethod.POST);
         assertEquals(user.getLogin(), user.getName());
-
     }
 
     @Test
