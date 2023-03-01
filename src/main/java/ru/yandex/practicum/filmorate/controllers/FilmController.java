@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import org.springframework.http.HttpMethod;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.model.Film;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
