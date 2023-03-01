@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.dao.UserRepository;;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validators.UserValidator;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserRepository repository = new UserRepository();
+    private final InMemoryUserStorage repository = new InMemoryUserStorage();
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping()

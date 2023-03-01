@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import org.springframework.http.HttpMethod;
-import ru.yandex.practicum.filmorate.dao.FilmRepository;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.model.Film;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.util.List;
 public class FilmController {
 
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
-    private final FilmRepository repository = new FilmRepository();
+    private final InMemoryFilmStorage repository = new InMemoryFilmStorage();
 
     @PostMapping()
     public Film addFilm(@Valid @RequestBody Film film) {
