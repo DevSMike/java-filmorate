@@ -1,5 +1,6 @@
-package ru.yandex.practicum.filmorate.dao;
+package ru.yandex.practicum.filmorate.storage;
 
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.ArrayList;
@@ -7,7 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FilmRepository {
+@Component
+public class InMemoryFilmStorage implements FilmStorage {
 
     private final Map<Integer, Film> films = new HashMap<>();
     private int idNumber = 0;
@@ -19,6 +21,10 @@ public class FilmRepository {
 
     public void update (Film film) {
         films.put(film.getId(), film);
+    }
+
+    public void delete (Film film) {
+        films.remove(film.getId());
     }
 
     public Film getById (int id) {
