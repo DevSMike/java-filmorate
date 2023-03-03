@@ -1,20 +1,19 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
 public class User {
 
-    int id;
+    long id;
     String name;
     @NonNull @Email(message = "Введено некорректное значение электронной почты.")
     String email;
@@ -23,4 +22,5 @@ public class User {
     String login;
     @NonNull  @PastOrPresent(message = "Дата не может быть в будущем")
     LocalDate birthday;
+    Set<Long> friends;
 }
