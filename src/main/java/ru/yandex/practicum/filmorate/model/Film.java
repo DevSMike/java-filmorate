@@ -8,12 +8,13 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
 public class Film {
 
-    int id;
+    long id;
     @NonNull
     String name;
     @NonNull @Length(min = 1, max = 200, message = "Описание фильма не должно превышать 200 символов.")
@@ -22,4 +23,9 @@ public class Film {
     LocalDate releaseDate;
     @NonNull @Min(value = 0, message = "Продолжительность фильма должна быть положительной")
     Integer duration;
+    Set<Long> likes;
+
+    public int getLikesLength() {
+        return likes.size();
+    }
 }
