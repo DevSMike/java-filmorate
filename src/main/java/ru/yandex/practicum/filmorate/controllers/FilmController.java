@@ -13,8 +13,6 @@ import ru.yandex.practicum.filmorate.validators.UserValidator;
 import javax.validation.Valid;
 import java.util.List;
 
-
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/films")

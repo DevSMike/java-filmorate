@@ -74,6 +74,4 @@ public class UserController {
         UserValidator.validatePutMethod(service.getUsersInMap().get(otherId), service.getUsersInMap());
         return service.getCommonFriends(id, otherId);
     }
-
-
 }
