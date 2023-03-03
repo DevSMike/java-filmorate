@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,10 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Primary
 public class InMemoryFilmStorage implements FilmStorage {
 
-    private final Map<Integer, Film> films = new HashMap<>();
-    private int idNumber = 0;
+    private final Map<Long, Film> films = new HashMap<>();
+    private long idNumber = 0;
 
     public void add (Film film) {
         film.setId(++idNumber);
@@ -28,15 +29,13 @@ public class InMemoryFilmStorage implements FilmStorage {
         films.remove(film.getId());
     }
 
-    public Film getById (int id) {
-        return films.get(id);
-    }
 
-    public List<Film> getAllInList() {
+    public List<Film> getFilmsList() {
         return new ArrayList<>(films.values());
     }
 
-    public Map<Integer,Film> getAll() {
+    public Map<Long, Film> getFilmsMap() {
         return films;
     }
+
 }
