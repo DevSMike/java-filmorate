@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -9,10 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Primary
 public class InMemoryUserStorage implements UserStorage {
 
-    private final Map<Integer, User> users = new HashMap<>();
-    private int idNumber = 0;
+    private final Map<Long, User> users = new HashMap<>();
+    private long idNumber = 0;
 
     public void add (User user) {
         user.setId(++idNumber);
@@ -27,15 +29,13 @@ public class InMemoryUserStorage implements UserStorage {
         users.remove(user.getId());
     }
 
-    public User getById (int id) {
-        return users.get(id);
-    }
 
-    public List<User> getAllInList() {
+    public List<User> getUsersList() {
         return new ArrayList<>(users.values());
     }
 
-    public Map<Integer,User> getAll() {
+    public Map<Long, User> getUsersMap() {
         return users;
     }
+
 }
