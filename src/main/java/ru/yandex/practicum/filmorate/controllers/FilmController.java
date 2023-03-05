@@ -1,38 +1,35 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.model.Film;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.validators.FilmValidator;
-import ru.yandex.practicum.filmorate.validators.UserValidator;
-
+import ru.yandex.practicum.filmorate.validators.exist.Exist;
+import ru.yandex.practicum.filmorate.validators.update.Update;
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/films")
 public class FilmController {
 
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final FilmService service;
-    private final UserService userService;
 
     @PostMapping()
     public Film addFilm(@Valid @RequestBody Film film) {
-        FilmValidator.validate(film);
         log.info("object " + film + " passed validation. return object");
         service.addFilm(film);
         return film;
     }
 
     @PutMapping()
-    public Film updateFilm(@Valid @RequestBody Film film) {
-        FilmValidator.validatePutMethod(film, service.getFilmsInMap());
+    public Film updateFilm(@Valid @RequestBody @Update(message = "film") Film film) {
         log.info("object " + film + " passed validation. update and returns object");
         service.updateFilm(film);
         return film;
@@ -44,22 +41,19 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film getFilmById(@PathVariable long id) {
-        FilmValidator.validate(service.getFilmsInMap().get(id));
-        return service.getFilmsInMap().get(id);
+    public Film getFilmById(@PathVariable @Exist(message = "film") long id) {
+        return service.getFilmById(id);
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void addLikeToFilm(@PathVariable long id, @PathVariable long userId) {
-        FilmValidator.validate(service.getFilmsInMap().get(id));
-        UserValidator.validate(userService.getUsersInMap().get(userId));
+    public void addLikeToFilm(@PathVariable @Exist(message = "film")  long id
+            ,@PathVariable @Exist(message = "film")  long userId) {
         service.addLikeToFilm(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void deleteLikeToFilm(@PathVariable long id, @PathVariable long userId) {
-        FilmValidator.validate(service.getFilmsInMap().get(id));
-        UserValidator.validate(userService.getUsersInMap().get(userId));
+    public void deleteLikeToFilm(@PathVariable @Exist(message = "film") long id
+            ,@PathVariable @Exist(message = "film") long userId) {
         service.deleteFilmLike(id, userId);
     }
 
