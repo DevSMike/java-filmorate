@@ -1,16 +1,18 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import ru.yandex.practicum.filmorate.validators.friends.InitializeField;
+import ru.yandex.practicum.filmorate.validators.username.CheckUsername;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Pattern;
+
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Set;
 
 @Data
 @Builder
+@CheckUsername
+@InitializeField(message = "user")
 public class User {
 
     long id;
