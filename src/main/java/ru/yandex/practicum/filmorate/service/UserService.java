@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
-
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,12 +14,10 @@ public class UserService {
     private final UserStorage userStorage;
 
     public void addUser(User user) {
-        checkFriendsSet(user);
         userStorage.add(user);
     }
 
     public void updateUser(User user) {
-        checkFriendsSet(user);
         userStorage.update(user);
     }
 
@@ -30,13 +25,14 @@ public class UserService {
         userStorage.delete(user);
     }
 
+    public User getUserById(long id) {
+        return userStorage.getUsersMap().get(id);
+    }
+
     public List<User> getUsersInList() {
         return userStorage.getUsersList();
     }
 
-    public Map<Long, User> getUsersInMap() {
-        return userStorage.getUsersMap();
-    }
 
     public void addFriend(long id, long friendId) {
         userStorage.getUsersMap().get(id).getFriends().add(friendId);
@@ -60,9 +56,4 @@ public class UserService {
                 .contains(x.getId())).collect(Collectors.toList());
     }
 
-    private void checkFriendsSet(User user) {
-        if (user.getFriends() == null) {
-            user.setFriends(new HashSet<>());
-        }
-    }
 }
