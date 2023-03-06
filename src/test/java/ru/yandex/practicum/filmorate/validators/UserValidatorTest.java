@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.validators;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpMethod;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -24,9 +23,9 @@ class UserValidatorTest {
                 .login("mike123")
                 .birthday(LocalDate.of(2002,6,18))
                 .build();
-        Map<Integer, User> users= new HashMap<>();
+        Map<Long, User> users= new HashMap<>();
 
-        assertDoesNotThrow(() ->  UserValidator.validate(user, users, HttpMethod.POST), "Exception throws");
+        assertDoesNotThrow(() ->  UserValidator.validate(user), "Exception throws");
     }
 
     @Test
@@ -36,10 +35,10 @@ class UserValidatorTest {
                 .login("mi ke")
                 .birthday(LocalDate.of(2002,6,18))
                 .build();
-        Map<Integer, User> users= new HashMap<>();
+        Map<Long, User> users= new HashMap<>();
 
         ValidationException e = assertThrows(ValidationException.class
-                ,() -> UserValidator.validate(user, users, HttpMethod.POST),"Exceptions does not throw");
+                ,() -> UserValidator.validate(user),"Exceptions does not throw");
         assertEquals(e.getMessage(), "Login is incorrect", "Messages are different");
     }
 
@@ -50,10 +49,10 @@ class UserValidatorTest {
                 .login("mike")
                 .birthday(LocalDate.of(2052,6,18))
                 .build();
-        Map<Integer, User> users= new HashMap<>();
+        Map<Long, User> users= new HashMap<>();
 
         ValidationException e = assertThrows(ValidationException.class
-                ,() -> UserValidator.validate(user, users, HttpMethod.POST));
+                ,() -> UserValidator.validate(user));
         assertEquals(e.getMessage(), "BirthDate is incorrect", "Messages are different");
     }
 
@@ -64,10 +63,10 @@ class UserValidatorTest {
                 .login("mike")
                 .birthday(LocalDate.of(2002,6,18))
                 .build();
-        Map<Integer, User> users= new HashMap<>();
+        Map<Long, User> users= new HashMap<>();
 
         ValidationException e = assertThrows(ValidationException.class
-                ,() -> UserValidator.validate(user, users, HttpMethod.POST), "Exceptions does not throw");
+                ,() -> UserValidator.validate(user), "Exceptions does not throw");
         assertEquals(e.getMessage(), "Email is incorrect","Messages are different");
     }
 
@@ -78,9 +77,9 @@ class UserValidatorTest {
                 .login("mike")
                 .birthday(LocalDate.of(2002,6,18))
                 .build();
-        Map<Integer, User> users= new HashMap<>();
+        Map<Long, User> users= new HashMap<>();
 
-        UserValidator.validate(user, users, HttpMethod.POST);
+        UserValidator.validate(user);
         assertEquals(user.getLogin(), user.getName());
 
     }
@@ -92,9 +91,9 @@ class UserValidatorTest {
                 .login("mike")
                 .birthday(LocalDate.of(2002,6,18))
                 .build();
-        Map<Integer, User> users= new HashMap<>();
+        Map<Long, User> users= new HashMap<>();
 
-        UserValidator.validate(user, users, HttpMethod.POST);
+        UserValidator.validate(user);
         users.put(user.getId(), user);
         String json = "{\n" +
                 "  \"login\": \"doloreUpdate\",\n" +
@@ -105,7 +104,7 @@ class UserValidatorTest {
                 "}";
 
         User user2 = gson.fromJson(json, User.class);
-        UserValidator.validate(user2, users, HttpMethod.POST);
+        UserValidator.validate(user2);
 
         users.put(user2.getId(), user2);
         assertEquals(user2.getName(), users.get(user2.getId()).getName(), "Objects are different");
@@ -118,9 +117,9 @@ class UserValidatorTest {
                 .login("mike")
                 .birthday(LocalDate.of(2002,6,18))
                 .build();
-        Map<Integer, User> users= new HashMap<>();
+        Map<Long, User> users= new HashMap<>();
 
-        UserValidator.validate(user, users, HttpMethod.POST);
+        UserValidator.validate(user);
         users.put(user.getId(), user);
         String json = "{\n" +
                 "  \"login\": \"doloreUpdate\",\n" +
@@ -132,7 +131,7 @@ class UserValidatorTest {
 
         User user2 = gson.fromJson(json, User.class);
         ValidationException e = assertThrows(ValidationException.class
-                ,() -> UserValidator.validate(user2, users, HttpMethod.PUT), "Exceptions does not throw");
+                ,() -> UserValidator.validatePutMethod(user2, users), "Exceptions does not throw");
         assertEquals(e.getMessage(),"Id is incorrect", "Messages are different");
     }
 }

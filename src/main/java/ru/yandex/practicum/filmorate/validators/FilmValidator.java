@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.validators;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -15,16 +14,18 @@ public class FilmValidator {
     private static final LocalDate FIRST_MOVIE_RELEASE = LocalDate.of(1895, 12, 28);
     private static final Logger log = LoggerFactory.getLogger(FilmValidator.class);
 
-    public static void validate (Film film, Map<Integer, Film> films, HttpMethod method) throws ValidationException {
+    public static void validate (Film film) throws ValidationException {
         validateName(film);
         validateDescription(film);
         validateReleaseDate(film);
         validateMovieDuration(film);
-        if (method.toString().equals("PUT")) {
-            validateId(film, films);
-        }
     }
-    private static void validateId(Film film, Map<Integer, Film> films) {
+
+    public static void validatePutMethod(Film film, Map<Long, Film> films) {
+        validateId(film, films);
+    }
+
+    private static void validateId(Film film, Map<Long, Film> films) {
         if (!films.containsKey(film.getId())) {
             log.debug(film + " failed validationId");
             throw new ValidationException("Film id is incorrect");
