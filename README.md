@@ -1,6 +1,6 @@
 # java-filmorate
 ## ER - диаграмма базы данных проекта Filmorate:
-![This is an image](https://i.ibb.co/DkJS1hN/filmorate-dbd.png)
+![This is an image](https://i.ibb.co/mDNFBN2/image.png)
 
 *Пример решения задачи поиска самого высокооцененного фильма путем составления SQL запроса*
 ```sql
