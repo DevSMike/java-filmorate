@@ -15,6 +15,7 @@ import java.util.Set;
 @InitializeField(message = "user")
 public class User {
 
+
     long id;
     String name;
     @NonNull @Email(message = "Введено некорректное значение электронной почты.")

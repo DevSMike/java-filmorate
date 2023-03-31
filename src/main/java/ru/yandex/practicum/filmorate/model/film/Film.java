@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.film;
 
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +11,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
@@ -28,7 +29,9 @@ public class Film {
     @NonNull @Min(value = 0, message = "Продолжительность фильма должна быть положительной")
     Integer duration;
     Set<Long> likes;
-
+    @NonNull
+    Mpa mpa;
+    LinkedHashSet<Genres> genres;
     public int getLikesLength() {
         return likes.size();
     }
