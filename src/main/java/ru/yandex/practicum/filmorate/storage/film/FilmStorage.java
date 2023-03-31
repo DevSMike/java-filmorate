@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 
 import java.util.List;
 import java.util.Map;
@@ -16,4 +16,8 @@ public interface FilmStorage {
     List<Film> getFilmsList();
 
     Map<Long, Film> getFilmsMap();
+
+    List<Film> getTopLikesFilms(int count);
+
+    Film getFilmById(long id);
 }
