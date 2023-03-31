@@ -27,8 +27,8 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public void add(Film film) {
         String sql = "INSERT INTO FILMS (FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION ,RATING_ID )VALUES (?,?,?,?,?);";
-        jdbcTemplate.update(sql, film.getName(), film.getDescription(), film.getReleaseDate(),
-                film.getDuration(), film.getMpa().getId());
+        jdbcTemplate.update(sql, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(),
+                film.getMpa().getId());
         log.info("film created");
         int filmId = jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
                 Integer.class);
@@ -37,8 +37,7 @@ public class FilmDbStorage implements FilmStorage {
             return;
         }
         for (Genres genres : film.getGenres()) {
-            jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?,?)",
-                    film.getId(), genres.getId());
+            jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?,?)", film.getId(), genres.getId());
         }
     }
 
@@ -55,8 +54,7 @@ public class FilmDbStorage implements FilmStorage {
             if (film.getGenres().size() > 0) {
                 log.info("ino" + film.getGenres());
                 for (Genres genres : film.getGenres()) {
-                    jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?);", film.getId(),
-                            genres.getId());
+                    jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?);", film.getId(), genres.getId());
                 }
             } else {
                 jdbcTemplate.update("DELETE FROM FILM_GENRES WHERE FILM_ID  = ?;", film.getId());
