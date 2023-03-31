@@ -34,8 +34,8 @@ public class UserDbStorageTest {
                 .birthday(LocalDate.parse("2011-11-12"))
                 .build();
         userStorage.add(user);
-        long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;"
-                , Integer.class);
+        long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;",
+                Integer.class);
         Optional<User> userOptional = Optional.ofNullable(userStorage.getUserById(id));
         assertEquals(userOptional.get().getName(), user.getName(), "usernames not equlas");
     }
@@ -49,8 +49,8 @@ public class UserDbStorageTest {
                 .birthday(LocalDate.parse("2001-11-12"))
                 .build();
         userStorage.add(user);
-        long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;"
-                , Integer.class);
+        long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;",
+                Integer.class);
         User getUser = userStorage.getUserById(id);
         assertEquals(user.getName(), getUser.getName(), "usernames not equlas");
 
@@ -65,8 +65,8 @@ public class UserDbStorageTest {
                 .email("newMail@mail.ru")
                 .build();
         userStorage.add(user);
-        long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;"
-                , Integer.class);
+        long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;",
+                Integer.class);
         User userUpdate = User.builder()
                 .id(id)
                 .login("newLogin")
@@ -144,8 +144,8 @@ public class UserDbStorageTest {
         userStorage.add(user3);
         userFriends.addFriend(user.getId(), user3.getId());
         userFriends.addFriend(user2.getId(), user3.getId());
-        assertEquals(userStorage.getCommonFriends(user.getId(), user2.getId()).get(0).getName(), user3.getName(), "names not eql");
-
+        assertEquals(userStorage.getCommonFriends(user.getId(), user2.getId()).get(0).getName(), user3.getName(),
+                "names not eql");
     }
 
     @Test
@@ -166,9 +166,7 @@ public class UserDbStorageTest {
         userStorage.add(user);
         userStorage.add(user2);
         userFriends.addFriend(user.getId(), user2.getId());
-
         assertEquals(userStorage.getUserFriends(user.getId()).get(0).getName(), user2.getName(), "names not eql");
-
     }
 
 

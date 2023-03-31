@@ -24,16 +24,16 @@ public class UserDbStorage implements UserStorage {
     public void add(User user) {
         String sql = "INSERT INTO USERS (USER_NAME, EMAIL, LOGIN, BIRTHDAY) VALUES (?, ?, ?, ?);";
         jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getLogin(), user.getBirthday());
-        long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;"
-                , Integer.class);
+        long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;",
+                Integer.class);
         user.setId(id);
         try {
             if (user.getFriends().size() == 0) {
                 return;
             }
             for (Long aLong : user.getFriends()) {
-                jdbcTemplate.update("INSERT INTO USER_FRIENDS (USER_ID, FRIEND_ID) VALUES (?,?)"
-                        , user.getId(), aLong);
+                jdbcTemplate.update("INSERT INTO USER_FRIENDS (USER_ID, FRIEND_ID) VALUES (?,?)",
+                        user.getId(), aLong);
             }
         } catch (NullPointerException e) {
             System.out.println("set friends are null");
@@ -42,8 +42,8 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void update(User user) {
-        jdbcTemplate.update("UPDATE USERS SET USER_NAME = ?, EMAIL = ?, LOGIN = ?, BIRTHDAY = ? WHERE USER_ID = ?;"
-                , user.getName(), user.getEmail(), user.getLogin(), user.getBirthday(), user.getId());
+        jdbcTemplate.update("UPDATE USERS SET USER_NAME = ?, EMAIL = ?, LOGIN = ?, BIRTHDAY = ? WHERE USER_ID = ?;",
+                user.getName(), user.getEmail(), user.getLogin(), user.getBirthday(), user.getId());
     }
 
     @Override

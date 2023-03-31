@@ -140,8 +140,8 @@ class FilmDbStorageTest {
                 .email("newMail@mail.ru")
                 .build();
         userStorage.add(user);
-        long userId = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;"
-                , Integer.class);
+        long userId = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;",
+                Integer.class);
         LinkedHashSet<Genres> genres = new LinkedHashSet<>();
         genres.add(new Genres(1, "Комедия"));
         Film film = Film.builder()
