@@ -52,7 +52,7 @@ public class FilmController {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void addLikeToFilm(@PathVariable long id, @PathVariable long userId) {
+    public void addLikeToFilm(@PathVariable long id , @PathVariable long userId) {
         try {
             service.addLikeToFilm(id, userId);
         } catch (ValidationException e) {
@@ -61,7 +61,7 @@ public class FilmController {
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void deleteLikeToFilm(@PathVariable long id,@PathVariable  long userId) {
+    public void deleteLikeToFilm(@PathVariable long id , @PathVariable  long userId) {
         try {
             service.deleteFilmLike(id, userId);
         } catch (ValidationException e) {

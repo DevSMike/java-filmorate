@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriendToUser(@PathVariable long id, @PathVariable long friendId) {
+    public void addFriendToUser(@PathVariable long id , @PathVariable long friendId) {
         try {
             service.addFriend(id, friendId);
         } catch (ValidationException e) {
@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable long id, @PathVariable long friendId) {
+    public void deleteFriend(@PathVariable long id , @PathVariable long friendId) {
         try {
             service.deleteFriend(id, friendId);
         } catch (ValidationException e) {
@@ -79,7 +79,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getUserCommonFriends(@PathVariable long id, @PathVariable long otherId) {
+    public List<User> getUserCommonFriends(@PathVariable long id , @PathVariable long otherId) {
         try {
             return service.getCommonFriends(id, otherId);
         } catch (ValidationException e) {
