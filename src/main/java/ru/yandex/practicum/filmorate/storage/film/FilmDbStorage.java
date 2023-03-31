@@ -47,25 +47,23 @@ public class FilmDbStorage implements FilmStorage{
         jdbcTemplate.update("UPDATE FILMS SET FILM_NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, " +
                 "RATING_ID  = ? WHERE FILM_ID = ?;", film.getName(), film.getDescription(), film.getReleaseDate(),
                 film.getDuration(), film.getMpa().getId(), film.getId());
-
         try {
             boolean isBdGenresEmpty = getFilmsMap().get(film.getId()).getGenres().isEmpty();
+            if (!isBdGenresEmpty) {
+                jdbcTemplate.update("DELETE FROM FILM_GENRES WHERE FILM_ID  = ?;", film.getId());
+            }
             if (film.getGenres().size() > 0) {
                 log.info("ino" + film.getGenres());
                 for (Genres genres : film.getGenres()) {
-                    if (!isBdGenresEmpty) {
-                        jdbcTemplate.update("UPDATE FILM_GENRES SET GENRE_ID = ? WHERE FILM_ID = ?;", genres.getId()
-                                ,film.getId());
-                    } else {
-                        jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?);", film.getId()
+                    jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?);", film.getId()
                                 ,genres.getId());
-                    }
                 }
-            } else  jdbcTemplate.update("DELETE FROM FILM_GENRES WHERE FILM_ID  = ?;", film.getId());
+            } else  {
+                jdbcTemplate.update("DELETE FROM FILM_GENRES WHERE FILM_ID  = ?;", film.getId());
+            }
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
         }
-
     }
 
     @Override
