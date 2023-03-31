@@ -63,8 +63,8 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(2005, 3, 25))
                 .duration(-250)
                 .build();
-        ValidationException e = assertThrows(ValidationException.class
-                , () -> FilmValidator.validate(film), "Exceptions does not throw");
+        ValidationException e = assertThrows(ValidationException.class, () -> FilmValidator.validate(film),
+                "Exceptions does not throw");
         assertEquals(e.getMessage(), "Film name is Empty", "Messages are different");
     }
 
@@ -80,8 +80,7 @@ class FilmValidatorTest {
                 .duration(250)
                 .build();
 
-        ValidationException e = assertThrows(ValidationException.class
-                , () -> FilmValidator.validate(film));
+        ValidationException e = assertThrows(ValidationException.class, () -> FilmValidator.validate(film));
         assertEquals(e.getMessage(), "Description is bigger than max", "Messages are different");
     }
 
@@ -93,10 +92,10 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(1890, 3, 25))
                 .duration(250)
                 .build();
-        ValidationException e = assertThrows(ValidationException.class
-                , () -> FilmValidator.validate(film), "Exceptions does not throw");
-        assertEquals(e.getMessage(), "Release date is before than first movie release"
-                , "Messages are different");
+        ValidationException e = assertThrows(ValidationException.class, () -> FilmValidator.validate(film),
+                "Exceptions does not throw");
+        assertEquals(e.getMessage(), "Release date is before than first movie release",
+                "Messages are different");
     }
 
     @Test
@@ -107,8 +106,8 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(2005, 3, 25))
                 .duration(-250)
                 .build();
-        ValidationException e = assertThrows(ValidationException.class
-                , () -> FilmValidator.validate(film), "Exceptions does not throw");
+        ValidationException e = assertThrows(ValidationException.class, () -> FilmValidator.validate(film),
+                "Exceptions does not throw");
         assertEquals(e.getMessage(), "Movie's duration is negative", "Messages are different");
     }
 
