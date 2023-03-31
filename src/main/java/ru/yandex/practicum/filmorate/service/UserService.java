@@ -1,32 +1,40 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.user.friends.UserFriends;
+import ru.yandex.practicum.filmorate.validators.UserValidator;
+
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserStorage userStorage;
+    private final UserFriends userFriendsStorage;
+    private final UserValidator userValidator;
 
     public void addUser(User user) {
         userStorage.add(user);
     }
 
-    public void updateUser(User user) {
+    public void updateUser (User user) {
+        userValidator.validateId(user.getId());
         userStorage.update(user);
     }
 
     public void deleteUser(User user) {
+        userValidator.validateId(user.getId());
         userStorage.delete(user);
     }
 
     public User getUserById(long id) {
-        return userStorage.getUsersMap().get(id);
+        userValidator.validateId(id);
+        return userStorage.getUserById(id);
     }
 
     public List<User> getUsersInList() {
@@ -35,25 +43,27 @@ public class UserService {
 
 
     public void addFriend(long id, long friendId) {
-        userStorage.getUsersMap().get(id).getFriends().add(friendId);
-        userStorage.getUsersMap().get(friendId).getFriends().add(id);
+        userValidator.validateId(id);
+        userValidator.validateId(friendId);
+        userFriendsStorage.addFriend(id, friendId);
     }
 
     public void deleteFriend(long id, long friendId) {
-        userStorage.getUsersMap().get(id).getFriends().remove(friendId);
-        userStorage.getUsersMap().get(friendId).getFriends().remove(id);
+        userValidator.validateId(id);
+        userValidator.validateId(friendId);
+        userFriendsStorage.deleteFriend(id, friendId);
     }
 
+
     public List<User> getUserFriends(long id) {
-       return userStorage.getUsersList().stream()
-                .filter(x -> userStorage.getUsersMap().get(id).getFriends().contains(x.getId()))
-                .collect(Collectors.toList());
+        userValidator.validateId(id);
+       return userStorage.getUserFriends(id);
     }
 
     public List<User> getCommonFriends(long id, long otherId) {
-        return userStorage.getUsersList().stream().filter(x -> userStorage.getUsersMap().get(id).getFriends()
-                        .contains(x.getId())).filter(x -> userStorage.getUsersMap().get(otherId).getFriends()
-                .contains(x.getId())).collect(Collectors.toList());
+        userValidator.validateId(id);
+        userValidator.validateId(otherId);
+        return userStorage.getCommonFriends(id, otherId);
     }
 
 }
