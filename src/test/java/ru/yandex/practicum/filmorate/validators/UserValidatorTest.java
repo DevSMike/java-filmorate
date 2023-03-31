@@ -23,8 +23,6 @@ class UserValidatorTest {
                 .login("mike123")
                 .birthday(LocalDate.of(2002, 6, 18))
                 .build();
-
-
         assertDoesNotThrow(() -> UserValidator.validate(user), "Exception throws");
     }
 
@@ -35,9 +33,8 @@ class UserValidatorTest {
                 .login("mi ke")
                 .birthday(LocalDate.of(2002, 6, 18))
                 .build();
-
-        ValidationException e = assertThrows(ValidationException.class
-                , () -> UserValidator.validate(user), "Exceptions does not throw");
+        ValidationException e = assertThrows(ValidationException.class, () -> UserValidator.validate(user),
+                "Exceptions does not throw");
         assertEquals(e.getMessage(), "Login is incorrect", "Messages are different");
     }
 
@@ -48,8 +45,8 @@ class UserValidatorTest {
                 .login("mike")
                 .birthday(LocalDate.of(2052, 6, 18))
                 .build();
-        ValidationException e = assertThrows(ValidationException.class
-                , () -> UserValidator.validate(user));
+        ValidationException e = assertThrows(ValidationException.class,
+                () -> UserValidator.validate(user));
         assertEquals(e.getMessage(), "BirthDate is incorrect", "Messages are different");
     }
 
@@ -60,8 +57,8 @@ class UserValidatorTest {
                 .login("mike")
                 .birthday(LocalDate.of(2002, 6, 18))
                 .build();
-        ValidationException e = assertThrows(ValidationException.class
-                , () -> UserValidator.validate(user), "Exceptions does not throw");
+        ValidationException e = assertThrows(ValidationException.class,
+                () -> UserValidator.validate(user), "Exceptions does not throw");
         assertEquals(e.getMessage(), "Email is incorrect", "Messages are different");
     }
 
@@ -74,7 +71,6 @@ class UserValidatorTest {
                 .build();
         UserValidator.validate(user);
         assertEquals(user.getLogin(), user.getName());
-
     }
 
     @Test

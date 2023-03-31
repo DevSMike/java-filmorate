@@ -19,27 +19,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.testng.Assert.assertEquals;
 
-class LocalDateAdapter extends TypeAdapter<LocalDate> {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    @Override
-    public void write(final JsonWriter jsonWriter, LocalDate localDate) throws IOException {
-        try {
-            jsonWriter.value(localDate.format(formatter));
-        } catch (NullPointerException e) {
-            System.out.println("На вход Time не передавалось!");
-            jsonWriter.value(LocalDate.MIN.format(formatter));
-        }
-    }
-
-    @Override
-    public LocalDate read(final JsonReader jsonReader) throws IOException {
-        return LocalDate.parse(jsonReader.nextString(), formatter);
-
-    }
-}
-
-class FilmValidatorTest {
+public class FilmValidatorTest {
 
     private final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
 
