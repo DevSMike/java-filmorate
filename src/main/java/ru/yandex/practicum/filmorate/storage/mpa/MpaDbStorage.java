@@ -12,14 +12,14 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class MpaDbStorage implements MpaStorage{
+public class MpaDbStorage implements MpaStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Mpa> getAllMpa() {
         String sql = "SELECT FR.RATING_ID, FR.RATING FROM FILM_RATING fr ;";
-        return new ArrayList<>(jdbcTemplate.query(sql, (rs,rowNum) -> makeMpa(rs)));
+        return new ArrayList<>(jdbcTemplate.query(sql, (rs, rowNum) -> makeMpa(rs)));
     }
 
     @Override

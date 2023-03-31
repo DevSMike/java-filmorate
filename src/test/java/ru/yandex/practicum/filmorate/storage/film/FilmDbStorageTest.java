@@ -38,13 +38,13 @@ class FilmDbStorageTest {
         Film film = Film.builder()
                 .name("Avatar")
                 .description("film")
-                .mpa(new Mpa(1,"G"))
+                .mpa(new Mpa(1, "G"))
                 .releaseDate(LocalDate.parse("2008-11-11"))
                 .duration(162)
                 .genres(genres)
                 .build();
         filmStorage.add(film);
-        int filmId =  jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
+        int filmId = jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
                 Integer.class);
         assertEquals(filmStorage.getFilmById(filmId).getName(), film.getName(), "names are diff");
 
@@ -57,19 +57,19 @@ class FilmDbStorageTest {
         Film film = Film.builder()
                 .name("Avatar 2 ")
                 .description("film")
-                .mpa(new Mpa(1,"G"))
+                .mpa(new Mpa(1, "G"))
                 .releaseDate(LocalDate.parse("2008-11-11"))
                 .duration(162)
                 .genres(genres)
                 .build();
         filmStorage.add(film);
-        long filmId =  jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
+        long filmId = jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
                 Integer.class);
         Film filmUpdate = Film.builder()
                 .id(filmId)
                 .name("Avatar2")
                 .description("film")
-                .mpa(new Mpa(1,"G"))
+                .mpa(new Mpa(1, "G"))
                 .releaseDate(LocalDate.parse("2008-11-11"))
                 .duration(162)
                 .genres(genres)
@@ -85,7 +85,7 @@ class FilmDbStorageTest {
         Film film = Film.builder()
                 .name("Nova 2")
                 .description("film")
-                .mpa(new Mpa(1,"G"))
+                .mpa(new Mpa(1, "G"))
                 .releaseDate(LocalDate.parse("2008-11-11"))
                 .duration(162)
                 .genres(genres)
@@ -94,7 +94,7 @@ class FilmDbStorageTest {
         filmStorage.add(film);
         int len = filmStorage.getFilmsList().size();
         filmStorage.delete(film);
-        assertEquals(filmStorage.getFilmsList().size(), len-1, "lens are diffrerent");
+        assertEquals(filmStorage.getFilmsList().size(), len - 1, "lens are diffrerent");
     }
 
     @Test
@@ -104,7 +104,7 @@ class FilmDbStorageTest {
         Film film = Film.builder()
                 .name("Nova 2")
                 .description("film")
-                .mpa(new Mpa(1,"G"))
+                .mpa(new Mpa(1, "G"))
                 .releaseDate(LocalDate.parse("2008-11-11"))
                 .duration(162)
                 .genres(genres)
@@ -121,7 +121,7 @@ class FilmDbStorageTest {
         Film film = Film.builder()
                 .name("Nova 3")
                 .description("film")
-                .mpa(new Mpa(1,"G"))
+                .mpa(new Mpa(1, "G"))
                 .releaseDate(LocalDate.parse("2008-11-11"))
                 .duration(162)
                 .genres(genres)
@@ -141,13 +141,13 @@ class FilmDbStorageTest {
                 .build();
         userStorage.add(user);
         long userId = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;"
-                ,Integer.class);
+                , Integer.class);
         LinkedHashSet<Genres> genres = new LinkedHashSet<>();
         genres.add(new Genres(1, "Комедия"));
         Film film = Film.builder()
                 .name("Nova111")
                 .description("film")
-                .mpa(new Mpa(1,"G"))
+                .mpa(new Mpa(1, "G"))
                 .releaseDate(LocalDate.parse("2008-11-11"))
                 .duration(162)
                 .genres(genres)
@@ -156,14 +156,14 @@ class FilmDbStorageTest {
         Film filmTopLikes = Film.builder()
                 .name("NovaL")
                 .description("film")
-                .mpa(new Mpa(1,"G"))
+                .mpa(new Mpa(1, "G"))
                 .releaseDate(LocalDate.parse("2008-11-11"))
                 .duration(162)
                 .genres(genres)
                 .build();
         filmStorage.add(film);
         filmStorage.add(filmTopLikes);
-        long filmId =  jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
+        long filmId = jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
                 Integer.class);
         filmLikes.addLikeToFilm(filmId, userId);
         List<Film> topLikes = filmStorage.getTopLikesFilms(1);
@@ -177,13 +177,13 @@ class FilmDbStorageTest {
         Film filmById = Film.builder()
                 .name("NovaById")
                 .description("film")
-                .mpa(new Mpa(1,"G"))
+                .mpa(new Mpa(1, "G"))
                 .releaseDate(LocalDate.parse("2008-11-11"))
                 .duration(162)
                 .genres(genres)
                 .build();
         filmStorage.add(filmById);
-        long filmId =  jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
+        long filmId = jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
                 Integer.class);
         assertEquals(filmStorage.getFilmById(filmId).getName(), filmById.getName(), "names are diff");
     }

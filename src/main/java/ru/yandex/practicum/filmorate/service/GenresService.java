@@ -19,7 +19,7 @@ public class GenresService {
     }
 
     public Genres getGenreById(int id) {
-        if (genresStorage.getAllGenres().stream().collect(Collectors.toMap(Genres::getId, x->x)).containsKey(id)) {
+        if (genresStorage.getAllGenres().stream().collect(Collectors.toMap(Genres::getId, x -> x)).containsKey(id)) {
             return genresStorage.getGenreById(id);
         } else throw new NullPointerException("Object not found!");
     }

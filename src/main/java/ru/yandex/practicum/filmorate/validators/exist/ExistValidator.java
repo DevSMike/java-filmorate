@@ -39,7 +39,7 @@ public class ExistValidator implements ConstraintValidator<Exist, Object> {
                     return isExist(null, filmStorage, null, null, ((Long) o), null, null);
                 }
                 if (o instanceof Film) {
-                    return isExist(null, filmStorage, null, (Film)o, null, null, null);
+                    return isExist(null, filmStorage, null, (Film) o, null, null, null);
                 }
                 break;
             }
@@ -54,57 +54,57 @@ public class ExistValidator implements ConstraintValidator<Exist, Object> {
             }
             case "mpa": {
                 if (o instanceof Long)
-                    return isExist(null, null, null, null, (Long)o, mpaStorage, null);
+                    return isExist(null, null, null, null, (Long) o, mpaStorage, null);
                 break;
             }
 
             case "genres": {
                 if (o instanceof Long)
-                    return isExist(null, null, null, null, (Long)o, null, genresService);
+                    return isExist(null, null, null, null, (Long) o, null, genresService);
                 break;
             }
             default: {
-                    log.debug(type + " not supported!");
-                }
+                log.debug(type + " not supported!");
             }
-            return false;
         }
-
-        private boolean isExist(UserStorage userStorage, FilmStorage filmStorage, User user, Film film, Long id,
-                                MpaStorage mpa, GenresService genres) {
-            if (userStorage != null) {
-                if (user != null) {
-                    if (userStorage.getUsersMap().containsKey(user.getId())) {
-                        return true;
-                    }
-                } else if (id != null) {
-                    if (userStorage.getUsersMap().containsKey(id)) {
-                        return true;
-                    }
-                }
-            }
-
-            if (filmStorage != null) {
-                if (film != null) {
-                    if (filmStorage.getFilmsMap().containsKey(film.getId())) {
-                        return true;
-                    }
-                } else if (id != null) {
-                    if (filmStorage.getFilmsMap().containsKey(id)) {
-                        return true;
-                    }
-                }
-            }
-            if (mpa != null) {
-                if (mpa.getAllMpa().stream().collect(Collectors.toMap(Mpa::getId, m->m)).containsKey((int)(long)id))
-                    return true;
-            }
-
-            if (genres != null) {
-                return genres.getAllGenres().stream().collect(Collectors.toMap(Genres::getId, g -> g))
-                        .containsKey((int) (long) id);
-            }
-
-            return false;
-        }
+        return false;
     }
+
+    private boolean isExist(UserStorage userStorage, FilmStorage filmStorage, User user, Film film, Long id,
+                            MpaStorage mpa, GenresService genres) {
+        if (userStorage != null) {
+            if (user != null) {
+                if (userStorage.getUsersMap().containsKey(user.getId())) {
+                    return true;
+                }
+            } else if (id != null) {
+                if (userStorage.getUsersMap().containsKey(id)) {
+                    return true;
+                }
+            }
+        }
+
+        if (filmStorage != null) {
+            if (film != null) {
+                if (filmStorage.getFilmsMap().containsKey(film.getId())) {
+                    return true;
+                }
+            } else if (id != null) {
+                if (filmStorage.getFilmsMap().containsKey(id)) {
+                    return true;
+                }
+            }
+        }
+        if (mpa != null) {
+            if (mpa.getAllMpa().stream().collect(Collectors.toMap(Mpa::getId, m -> m)).containsKey((int) (long) id))
+                return true;
+        }
+
+        if (genres != null) {
+            return genres.getAllGenres().stream().collect(Collectors.toMap(Genres::getId, g -> g))
+                    .containsKey((int) (long) id);
+        }
+
+        return false;
+    }
+}

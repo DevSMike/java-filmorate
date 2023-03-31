@@ -23,13 +23,13 @@ public class MpaController {
 
     @GetMapping
     public List<Mpa> getAllMpa() {
-      return mpaService.getAllMpa();
+        return mpaService.getAllMpa();
     }
 
     @GetMapping("/{id}")
     public Mpa getMpaById(@Valid @PathVariable long id) {
         try {
-            return mpaService.getMpaById((int)id);
+            return mpaService.getMpaById((int) id);
         } catch (NullPointerException e) {
             throw new NullPointerException(e.getMessage());
         }

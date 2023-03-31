@@ -15,16 +15,16 @@ public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
     private long idNumber = 0;
 
-    public void add (User user) {
+    public void add(User user) {
         user.setId(++idNumber);
         users.put(idNumber, user);
     }
 
-    public void update (User user) {
+    public void update(User user) {
         users.put(user.getId(), user);
     }
 
-    public void delete (User user) {
+    public void delete(User user) {
         users.remove(user.getId());
     }
 

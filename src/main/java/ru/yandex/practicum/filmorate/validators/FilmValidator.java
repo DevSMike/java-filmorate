@@ -19,14 +19,14 @@ public class FilmValidator {
     private static final Logger log = LoggerFactory.getLogger(FilmValidator.class);
     private final FilmStorage filmStorage;
 
-    public static void validate (Film film) throws ValidationException {
+    public static void validate(Film film) throws ValidationException {
         validateName(film);
         validateDescription(film);
         validateReleaseDate(film);
         validateMovieDuration(film);
     }
 
-    public void validateId (long id) {
+    public void validateId(long id) {
         if (!filmStorage.getFilmsMap().containsKey(id)) {
             log.debug(id + " failed validationId");
             throw new ValidationException("Film id is incorrect");

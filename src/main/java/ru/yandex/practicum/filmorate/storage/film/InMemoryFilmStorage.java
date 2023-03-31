@@ -12,16 +12,16 @@ public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
     private long idNumber = 0;
 
-    public void add (Film film) {
+    public void add(Film film) {
         film.setId(++idNumber);
         films.put(idNumber, film);
     }
 
-    public void update (Film film) {
+    public void update(Film film) {
         films.put(film.getId(), film);
     }
 
-    public void delete (Film film) {
+    public void delete(Film film) {
         films.remove(film.getId());
     }
 

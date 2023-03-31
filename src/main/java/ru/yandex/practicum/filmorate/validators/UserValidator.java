@@ -14,17 +14,16 @@ import java.time.LocalDate;
 @Component
 public class UserValidator {
 
-    private final UserStorage userStorage ;
+    private final UserStorage userStorage;
 
     private static final Logger log = LoggerFactory.getLogger(UserValidator.class);
 
-    public static void validate (User user) {
+    public static void validate(User user) {
         validateLogin(user);
         validateEmail(user);
         validateUsername(user);
         validateBirthDate(user);
     }
-
 
 
     public static void validateFriendsSet(User user, long friendId) {
@@ -39,7 +38,7 @@ public class UserValidator {
         log.debug(user + " have a friend, passed validation");
     }
 
-    public void validateId (Long id) {
+    public void validateId(Long id) {
         if (!userStorage.getUsersMap().containsKey(id)) {
             log.debug(id + " failed validationId");
             throw new ValidationException("Id is incorrect");

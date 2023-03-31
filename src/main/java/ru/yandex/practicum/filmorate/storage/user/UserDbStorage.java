@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Primary
 @Component
 @RequiredArgsConstructor
-public class UserDbStorage implements UserStorage{
+public class UserDbStorage implements UserStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -25,7 +25,7 @@ public class UserDbStorage implements UserStorage{
         String sql = "INSERT INTO USERS (USER_NAME, EMAIL, LOGIN, BIRTHDAY) VALUES (?, ?, ?, ?);";
         jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getLogin(), user.getBirthday());
         long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;"
-                ,Integer.class);
+                , Integer.class);
         user.setId(id);
         try {
             if (user.getFriends().size() == 0) {
@@ -64,7 +64,7 @@ public class UserDbStorage implements UserStorage{
 
     @Override
     public Map<Long, User> getUsersMap() {
-        return getUsersList().stream().collect(Collectors.toMap(User::getId, user->user));
+        return getUsersList().stream().collect(Collectors.toMap(User::getId, user -> user));
     }
 
     @Override
@@ -73,8 +73,8 @@ public class UserDbStorage implements UserStorage{
                 " WHERE u.USER_ID IN (SELECT uf.FRIEND_ID FROM USER_FRIENDS uf \n" +
                 "\t\t\t\t  GROUP BY uf.FRIEND_ID \n" +
                 "\t\t\t\t  HAVING STRING_AGG(uf.USER_ID , ' ') LIKE ? AND STRING_AGG(uf.USER_ID , ' ') LIKE ?); ";
-        return new ArrayList<>(jdbcTemplate.query(sql, (rs,rowNum) -> makeUser(rs, sql),
-                "%"+id+"%", "%"+otherId+"%"));
+        return new ArrayList<>(jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs, sql),
+                "%" + id + "%", "%" + otherId + "%"));
     }
 
     @Override
@@ -96,7 +96,7 @@ public class UserDbStorage implements UserStorage{
         if (sql.contains("friends")) {
             Optional<Array> userFriends = Optional.ofNullable(rs.getArray("friends"));
             if (userFriends.isPresent()) {
-                friends = Arrays.stream((Object[])userFriends.get().getArray()).map(Object::toString)
+                friends = Arrays.stream((Object[]) userFriends.get().getArray()).map(Object::toString)
                         .flatMap(Pattern.compile(",")::splitAsStream).map(Long::valueOf)
                         .collect(Collectors.toSet());
             }

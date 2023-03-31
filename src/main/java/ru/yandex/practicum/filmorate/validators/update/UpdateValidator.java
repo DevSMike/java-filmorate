@@ -37,7 +37,7 @@ public class UpdateValidator implements ConstraintValidator<Update, Object> {
                 }
             }
             case "user": {
-                User user = (User)o;
+                User user = (User) o;
                 if (userStorage.getUsersMap().containsKey(user.getId())) {
                     return true;
                 } else {

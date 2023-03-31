@@ -20,32 +20,32 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class FilmDbStorage implements FilmStorage{
+public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void add(Film film)  {
+    public void add(Film film) {
         String sql = "INSERT INTO FILMS (FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION ,RATING_ID )VALUES (?,?,?,?,?);";
-       jdbcTemplate.update(sql, film.getName(), film.getDescription(), film.getReleaseDate()
-               ,film.getDuration(), film.getMpa().getId());
-       log.info("film created");
-         int filmId =  jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
-                 Integer.class);
-         film.setId(filmId);
-         if (film.getGenres().size() == 0) {
-             return;
-         }
-         for (Genres genres : film.getGenres()) {
-             jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?,?)"
-                     ,film.getId(), genres.getId());
-         }
+        jdbcTemplate.update(sql, film.getName(), film.getDescription(), film.getReleaseDate()
+                , film.getDuration(), film.getMpa().getId());
+        log.info("film created");
+        int filmId = jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
+                Integer.class);
+        film.setId(filmId);
+        if (film.getGenres().size() == 0) {
+            return;
+        }
+        for (Genres genres : film.getGenres()) {
+            jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?,?)"
+                    , film.getId(), genres.getId());
+        }
     }
 
     @Override
     public void update(Film film) {
         jdbcTemplate.update("UPDATE FILMS SET FILM_NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, " +
-                "RATING_ID  = ? WHERE FILM_ID = ?;", film.getName(), film.getDescription(), film.getReleaseDate(),
+                        "RATING_ID  = ? WHERE FILM_ID = ?;", film.getName(), film.getDescription(), film.getReleaseDate(),
                 film.getDuration(), film.getMpa().getId(), film.getId());
         try {
             boolean isBdGenresEmpty = getFilmsMap().get(film.getId()).getGenres().isEmpty();
@@ -56,9 +56,9 @@ public class FilmDbStorage implements FilmStorage{
                 log.info("ino" + film.getGenres());
                 for (Genres genres : film.getGenres()) {
                     jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?);", film.getId()
-                                ,genres.getId());
+                            , genres.getId());
                 }
-            } else  {
+            } else {
                 jdbcTemplate.update("DELETE FROM FILM_GENRES WHERE FILM_ID  = ?;", film.getId());
             }
         } catch (NullPointerException e) {
@@ -114,16 +114,16 @@ public class FilmDbStorage implements FilmStorage{
                 "LEFT JOIN FILM_GENRES fg ON f.FILM_ID = fg.FILM_ID \n" +
                 "LEFT JOIN GENRE_INFO gi ON fg.GENRE_ID = gi.GENRE_ID \n" +
                 "WHERE f.FILM_ID = ? ;";
-        return jdbcTemplate.queryForObject(sql, (rs,rowNum)->makeFilm(rs,sql), id);
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeFilm(rs, sql), id);
     }
 
-    private Film makeFilm( ResultSet rs, String sql) throws SQLException {
+    private Film makeFilm(ResultSet rs, String sql) throws SQLException {
         Optional<Array> genres = Optional.ofNullable(rs.getArray("genre"));
         Set<Long> setLikes = new HashSet<>();
         if (sql.contains("user_likes")) {
             Optional<Array> userLikes = Optional.ofNullable(rs.getArray("user_likes"));
             if (userLikes.isPresent()) {
-                setLikes = Arrays.stream((Object[])userLikes.get().getArray()).map(Object::toString)
+                setLikes = Arrays.stream((Object[]) userLikes.get().getArray()).map(Object::toString)
                         .flatMap(Pattern.compile(",")::splitAsStream).map(Long::valueOf)
                         .collect(Collectors.toSet());
             }

@@ -28,9 +28,9 @@ public class GenresController {
     }
 
     @GetMapping("/{id}")
-    public Genres getGenreById(@PathVariable  long id) {
+    public Genres getGenreById(@PathVariable long id) {
         try {
-            return genresService.getGenreById((int)id);
+            return genresService.getGenreById((int) id);
         } catch (NullPointerException e) {
             throw new ValidationException(e.getMessage());
         }

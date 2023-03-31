@@ -22,7 +22,7 @@ public class UserService {
         userStorage.add(user);
     }
 
-    public void updateUser (User user) {
+    public void updateUser(User user) {
         userValidator.validateId(user.getId());
         userStorage.update(user);
     }
@@ -57,7 +57,7 @@ public class UserService {
 
     public List<User> getUserFriends(long id) {
         userValidator.validateId(id);
-       return userStorage.getUserFriends(id);
+        return userStorage.getUserFriends(id);
     }
 
     public List<User> getCommonFriends(long id, long otherId) {

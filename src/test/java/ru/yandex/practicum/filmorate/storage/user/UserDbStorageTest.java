@@ -35,7 +35,7 @@ public class UserDbStorageTest {
                 .build();
         userStorage.add(user);
         long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;"
-                ,Integer.class);
+                , Integer.class);
         Optional<User> userOptional = Optional.ofNullable(userStorage.getUserById(id));
         assertEquals(userOptional.get().getName(), user.getName(), "usernames not equlas");
     }
@@ -50,7 +50,7 @@ public class UserDbStorageTest {
                 .build();
         userStorage.add(user);
         long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;"
-                ,Integer.class);
+                , Integer.class);
         User getUser = userStorage.getUserById(id);
         assertEquals(user.getName(), getUser.getName(), "usernames not equlas");
 
@@ -66,7 +66,7 @@ public class UserDbStorageTest {
                 .build();
         userStorage.add(user);
         long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;"
-                ,Integer.class);
+                , Integer.class);
         User userUpdate = User.builder()
                 .id(id)
                 .login("newLogin")
@@ -90,7 +90,7 @@ public class UserDbStorageTest {
         userStorage.add(user);
         int len = userStorage.getUsersList().size();
         userStorage.delete(user);
-        assertEquals(userStorage.getUsersList().size(), len-1, "lens are diffrerent");
+        assertEquals(userStorage.getUsersList().size(), len - 1, "lens are diffrerent");
     }
 
     @Test

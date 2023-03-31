@@ -21,8 +21,8 @@ public class MpaService {
     }
 
     public Mpa getMpaById(int id) {
-        if (mpaStorage.getAllMpa().stream().collect(Collectors.toMap(Mpa::getId, m->m)).containsKey(id)) {
+        if (mpaStorage.getAllMpa().stream().collect(Collectors.toMap(Mpa::getId, m -> m)).containsKey(id)) {
             return mpaStorage.getMpaById(id);
-        } else throw new NullPointerException ("Object not found");
+        } else throw new NullPointerException("Object not found");
     }
 }

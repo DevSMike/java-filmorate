@@ -13,7 +13,7 @@ public class FilmDbLikes implements FilmLikes {
     @Override
     public void addLikeToFilm(long filmId, long userId) {
         String sql = "INSERT INTO FILM_LIKES (USER_ID, FILM_ID) VALUES (?,?);";
-        jdbcTemplate.update(sql,userId, filmId);
+        jdbcTemplate.update(sql, userId, filmId);
     }
 
     @Override

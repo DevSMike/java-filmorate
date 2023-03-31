@@ -7,11 +7,11 @@ import java.util.Map;
 
 public interface UserStorage {
 
-    void add (User user);
+    void add(User user);
 
-    void update (User user);
+    void update(User user);
 
-    void delete (User user);
+    void delete(User user);
 
     List<User> getUsersList();
 

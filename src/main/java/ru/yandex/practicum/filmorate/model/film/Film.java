@@ -24,7 +24,8 @@ public class Film {
     String name;
     @NonNull @Length(min = 1, max = 200, message = "Описание фильма не должно превышать 200 символов.")
     String description;
-    @NonNull @PastOrPresent(message = "Дата не может быть в будущем") @FilmRelease
+    @NonNull @PastOrPresent(message = "Дата не может быть в будущем")
+    @FilmRelease
     LocalDate releaseDate;
     @NonNull @Min(value = 0, message = "Продолжительность фильма должна быть положительной")
     Integer duration;
@@ -32,6 +33,7 @@ public class Film {
     @NonNull
     Mpa mpa;
     LinkedHashSet<Genres> genres;
+
     public int getLikesLength() {
         return likes.size();
     }
