@@ -6,10 +6,9 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpMethod;
 
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -51,7 +50,6 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(2005, 3, 25))
                 .duration(250)
                 .build();
-        Map<Long, Film> films = new HashMap<>();
 
         assertDoesNotThrow(() ->  FilmValidator.validate(film), "Exception throws");
     }
@@ -64,8 +62,6 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(2005, 3, 25))
                 .duration(-250)
                 .build();
-        Map<Long, Film> films = new HashMap<>();
-
         ValidationException e = assertThrows(ValidationException.class
                 ,() -> FilmValidator.validate(film),"Exceptions does not throw");
         assertEquals(e.getMessage(), "Film name is Empty", "Messages are different");
@@ -82,7 +78,6 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(2005, 3, 25))
                 .duration(250)
                 .build();
-        Map<Long, Film> films = new HashMap<>();
 
         ValidationException e = assertThrows(ValidationException.class
                 ,() -> FilmValidator.validate(film));
@@ -97,8 +92,6 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(1890, 3, 25))
                 .duration(250)
                 .build();
-        Map<Long, Film> films = new HashMap<>();
-
         ValidationException e = assertThrows(ValidationException.class
                 ,() -> FilmValidator.validate(film), "Exceptions does not throw");
         assertEquals(e.getMessage(), "Release date is before than first movie release"
@@ -113,8 +106,6 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(2005, 3, 25))
                 .duration(-250)
                 .build();
-        Map<Long, Film> films = new HashMap<>();
-
         ValidationException e = assertThrows(ValidationException.class
                 ,() -> FilmValidator.validate(film),"Exceptions does not throw");
         assertEquals(e.getMessage(), "Movie's duration is negative", "Messages are different");
@@ -168,10 +159,5 @@ class FilmValidatorTest {
                 "  \"duration\": 190,\n" +
                 "  \"rate\": 4\n" +
                 "}";
-
-        Film film2 = gson.fromJson(json, Film.class);
-        ValidationException e = assertThrows(ValidationException.class
-                ,() -> FilmValidator.validatePutMethod(film2, films), "Exceptions does not throw");
-        assertEquals(e.getMessage(),"Film id is incorrect", "Messages are different");
     }
 }
