@@ -1,14 +1,20 @@
 package ru.yandex.practicum.filmorate.validators;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
-import java.util.Map;
 
+@RequiredArgsConstructor
+@Component
 public class UserValidator {
+
+    private final UserStorage userStorage ;
 
     private static final Logger log = LoggerFactory.getLogger(UserValidator.class);
 
@@ -19,9 +25,7 @@ public class UserValidator {
         validateBirthDate(user);
     }
 
-    public static void validatePutMethod(User user, Map<Long, User> users) {
-        validateId(user, users);
-    }
+
 
     public static void validateFriendsSet(User user, long friendId) {
         validateFriends(user, friendId);
@@ -35,12 +39,12 @@ public class UserValidator {
         log.debug(user + " have a friend, passed validation");
     }
 
-    private static void validateId (User user, Map<Long, User> users) {
-        if (!users.containsKey(user.getId())) {
-            log.debug(user + " failed validationId");
+    public void validateId (Long id) {
+        if (!userStorage.getUsersMap().containsKey(id)) {
+            log.debug(id + " failed validationId");
             throw new ValidationException("Id is incorrect");
         }
-        log.debug(user + " passed validationId");
+        log.debug(id + " passed validationId");
     }
 
     private static void validateEmail(User user) {
