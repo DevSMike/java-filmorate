@@ -6,10 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.model.User;;
-import ru.yandex.practicum.filmorate.validators.exist.Exist;
-import ru.yandex.practicum.filmorate.validators.update.Update;
+import ru.yandex.practicum.filmorate.model.User;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.util.List;
 
 @RestController
@@ -29,10 +28,13 @@ public class UserController {
     }
 
     @PutMapping()
-    public User updateUser(@Valid @RequestBody @Update(message = "user") User user) {
-        log.info("object " + user + " passed validation. update and returns object");
-        service.updateUser(user);
-        return user;
+    public User updateUser(@Valid @RequestBody User user) {
+        try {
+            service.updateUser(user);
+            return user;
+        } catch (ValidationException e) {
+            throw new ValidationException(e.getMessage());
+        }
     }
 
     @GetMapping()
@@ -41,30 +43,47 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable @Exist(message = "user") long id) {
-        return service.getUserById(id);
+    public User getUserById(@PathVariable long id) {
+        try {
+            return service.getUserById(id);
+        } catch (ValidationException e) {
+            throw new NullPointerException(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriendToUser(@PathVariable @Exist(message = "user") long id
-            ,@PathVariable @Exist(message = "user") long friendId) {
-        service.addFriend(id, friendId);
+    public void addFriendToUser(@PathVariable long id ,@PathVariable long friendId) {
+        try {
+            service.addFriend(id, friendId);
+        } catch (ValidationException e) {
+            throw new NullPointerException(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable @Exist(message = "user") long id
-            ,@PathVariable @Exist(message = "user") long friendId) {
-        service.deleteFriend(id, friendId);
+    public void deleteFriend(@PathVariable long id ,@PathVariable long friendId) {
+        try {
+            service.deleteFriend(id, friendId);
+        } catch (ValidationException e) {
+            throw new NullPointerException(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> getUserFriends(@PathVariable @Exist(message = "user") long id) {
-        return service.getUserFriends(id);
+    public List<User> getUserFriends(@PathVariable long id) {
+        try {
+            return service.getUserFriends(id);
+        } catch (ValidationException e) {
+            throw new NullPointerException(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getUserCommonFriends(@PathVariable @Exist(message = "user") long id,
-                                           @PathVariable @Exist(message = "user") long otherId) {
-        return service.getCommonFriends(id, otherId);
+    public List<User> getUserCommonFriends(@PathVariable long id, @PathVariable long otherId) {
+        try {
+            return service.getCommonFriends(id, otherId);
+        } catch (ValidationException e) {
+            throw new NullPointerException(e.getMessage());
+        }
     }
 }

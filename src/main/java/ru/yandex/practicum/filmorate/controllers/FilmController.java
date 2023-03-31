@@ -3,13 +3,12 @@ package ru.yandex.practicum.filmorate.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.validators.exist.Exist;
-import ru.yandex.practicum.filmorate.validators.update.Update;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.util.List;
 
 @RestController
@@ -29,9 +28,12 @@ public class FilmController {
     }
 
     @PutMapping()
-    public Film updateFilm(@Valid @RequestBody @Update(message = "film") Film film) {
-        log.info("object " + film + " passed validation. update and returns object");
-        service.updateFilm(film);
+    public Film updateFilm(@Valid @RequestBody Film film) {
+        try {
+            service.updateFilm(film);
+        } catch (ValidationException e) {
+            throw new NullPointerException(e.getMessage());
+        }
         return film;
     }
 
@@ -41,20 +43,30 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film getFilmById(@PathVariable @Exist(message = "film") long id) {
-        return service.getFilmById(id);
+    public Film getFilmById(@PathVariable long id) {
+        try {
+            return service.getFilmById(id);
+        } catch (ValidationException e) {
+            throw new NullPointerException(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void addLikeToFilm(@PathVariable @Exist(message = "film")  long id
-            ,@PathVariable @Exist(message = "film")  long userId) {
-        service.addLikeToFilm(id, userId);
+    public void addLikeToFilm(@PathVariable long id, @PathVariable  long userId) {
+        try {
+            service.addLikeToFilm(id, userId);
+        } catch (ValidationException e) {
+            throw new NullPointerException(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void deleteLikeToFilm(@PathVariable @Exist(message = "film") long id
-            ,@PathVariable @Exist(message = "film") long userId) {
-        service.deleteFilmLike(id, userId);
+    public void deleteLikeToFilm(@PathVariable long id,@PathVariable  long userId) {
+        try {
+            service.deleteFilmLike(id, userId);
+        } catch (ValidationException e) {
+            throw new NullPointerException(e.getMessage());
+        }
     }
 
     @GetMapping("/popular")
