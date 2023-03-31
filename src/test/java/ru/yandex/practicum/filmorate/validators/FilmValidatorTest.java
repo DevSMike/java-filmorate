@@ -148,7 +148,6 @@ class FilmValidatorTest {
                 .duration(250)
                 .build();
         Map<Long, Film> films = new HashMap<>();
-
         FilmValidator.validate(film);
         films.put(film.getId(), film);
         String json = "{\n" +
