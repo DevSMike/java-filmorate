@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.validators.old.FilmValidator;
 
 import java.time.LocalDate;
 import java.util.HashMap;

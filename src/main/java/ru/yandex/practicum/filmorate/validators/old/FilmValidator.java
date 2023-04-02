@@ -1,16 +1,14 @@
-package ru.yandex.practicum.filmorate.validators;
+package ru.yandex.practicum.filmorate.validators.old;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.time.LocalDate;
 
-@Component
 @RequiredArgsConstructor
 public class FilmValidator {
 

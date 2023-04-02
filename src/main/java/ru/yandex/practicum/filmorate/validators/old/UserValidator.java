@@ -1,9 +1,8 @@
-package ru.yandex.practicum.filmorate.validators;
+package ru.yandex.practicum.filmorate.validators.old;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -11,7 +10,6 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.time.LocalDate;
 
 @RequiredArgsConstructor
-@Component
 public class UserValidator {
 
     private final UserStorage userStorage;
@@ -24,7 +22,6 @@ public class UserValidator {
         validateUsername(user);
         validateBirthDate(user);
     }
-
 
     public static void validateFriendsSet(User user, long friendId) {
         validateFriends(user, friendId);
