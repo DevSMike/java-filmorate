@@ -5,8 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.likes.FilmLikes;
-import ru.yandex.practicum.filmorate.validators.FilmValidator;
-import ru.yandex.practicum.filmorate.validators.UserValidator;
+import ru.yandex.practicum.filmorate.validators.id.EntityIdValidator;
 
 import java.util.*;
 
@@ -16,20 +15,19 @@ public class FilmService {
 
     private final FilmStorage filmStorage;
     private final FilmLikes filmLikesStorage;
-    private final FilmValidator filmValidator;
-    private final UserValidator userValidator;
+    private final EntityIdValidator entityIdValidator;
 
     public void addFilm(Film film) {
         filmStorage.add(film);
     }
 
     public void updateFilm(Film film) {
-        filmValidator.validateId(film.getId());
+        entityIdValidator.checkFilmId(film.getId());
         filmStorage.update(film);
     }
 
     public Film getFilmById(long id) {
-        filmValidator.validateId(id);
+        entityIdValidator.checkFilmId(id);
         return filmStorage.getFilmById(id);
     }
 
@@ -46,8 +44,8 @@ public class FilmService {
     }
 
     public void addLikeToFilm(long filmId, long userId) {
-        userValidator.validateId(userId);
-        filmValidator.validateId(filmId);
+        entityIdValidator.checkUserId(userId);
+        entityIdValidator.checkFilmId(filmId);
         filmLikesStorage.addLikeToFilm(filmId, userId);
     }
 
@@ -59,8 +57,8 @@ public class FilmService {
     }
 
     public void deleteFilmLike(long filmId, long userId) {
-        userValidator.validateId(userId);
-        filmValidator.validateId(filmId);
+        entityIdValidator.checkUserId(userId);
+        entityIdValidator.checkFilmId(filmId);
         filmLikesStorage.deleteFilmLike(filmId, userId);
     }
 }
