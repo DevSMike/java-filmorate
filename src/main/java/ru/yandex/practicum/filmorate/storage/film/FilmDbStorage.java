@@ -44,10 +44,11 @@ public class FilmDbStorage implements FilmStorage {
                         "RATING_ID  = ? WHERE FILM_ID = ?;", film.getName(), film.getDescription(), film.getReleaseDate(),
                 film.getDuration(), film.getMpa().getId(), film.getId());
         jdbcTemplate.update("DELETE FROM FILM_GENRES WHERE FILM_ID  = ?;", film.getId());
-        if (film.getGenres().isEmpty()) {
+        Optional<LinkedHashSet<Genres>> filmGenres = Optional.ofNullable(film.getGenres());
+        if (filmGenres.isEmpty()) {
             return;
         }
-        for (Genres genres : film.getGenres()) {
+        for (Genres genres : filmGenres.get()) {
             jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?);", film.getId(), genres.getId());
         }
     }
