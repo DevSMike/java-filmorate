@@ -24,19 +24,14 @@ public class UserDbStorage implements UserStorage {
     public void add(User user) {
         String sql = "INSERT INTO USERS (USER_NAME, EMAIL, LOGIN, BIRTHDAY) VALUES (?, ?, ?, ?);";
         jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getLogin(), user.getBirthday());
-        long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;",
-                Integer.class);
+        long id = jdbcTemplate.queryForObject("SELECT USER_ID FROM  USERS ORDER BY USER_ID DESC LIMIT 1;", Integer.class);
         user.setId(id);
-        try {
-            if (user.getFriends().size() == 0) {
-                return;
-            }
-            for (Long aLong : user.getFriends()) {
-                jdbcTemplate.update("INSERT INTO USER_FRIENDS (USER_ID, FRIEND_ID) VALUES (?,?)",
-                        user.getId(), aLong);
-            }
-        } catch (NullPointerException e) {
-            System.out.println("set friends are null");
+        Optional<Set<Long>> userLikes = Optional.ofNullable(user.getFriends());
+        if (userLikes.isEmpty()) {
+            return;
+        }
+        for (Long aLong : userLikes.get()) {
+            jdbcTemplate.update("INSERT INTO USER_FRIENDS (USER_ID, FRIEND_ID) VALUES (?,?)", user.getId(), aLong);
         }
     }
 
@@ -55,10 +50,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getUsersList() {
         String sql = "SELECT u.USER_ID, u.USER_NAME , u.EMAIL, u.LOGIN, u.BIRTHDAY, STRING_AGG(uf.FRIEND_ID, ',')" +
-                " AS friends\n" +
-                "FROM USERS u \n" +
-                "LEFT JOIN USER_FRIENDS AS uf ON u.user_id = uf.user_id\n" +
-                "GROUP BY u.user_id;";
+                " AS friends FROM USERS u LEFT JOIN USER_FRIENDS AS uf ON u.user_id = uf.user_id GROUP BY u.user_id;";
         return new ArrayList<>(jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs, sql)));
     }
 
@@ -69,18 +61,18 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getCommonFriends(long id, long otherId) {
-        String sql = " SELECT u.USER_ID, u.USER_NAME , u.EMAIL, u.LOGIN, u.BIRTHDAY FROM USERS u\n" +
-                " WHERE u.USER_ID IN (SELECT uf.FRIEND_ID FROM USER_FRIENDS uf \n" +
-                "\t\t\t\t  GROUP BY uf.FRIEND_ID \n" +
-                "\t\t\t\t  HAVING STRING_AGG(uf.USER_ID , ' ') LIKE ? AND STRING_AGG(uf.USER_ID , ' ') LIKE ?); ";
+        String sql = " SELECT u.USER_ID, u.USER_NAME , u.EMAIL, u.LOGIN, u.BIRTHDAY FROM USERS u " +
+                "WHERE u.USER_ID IN (SELECT uf.FRIEND_ID FROM USER_FRIENDS uf " +
+                "GROUP BY uf.FRIEND_ID " +
+                "HAVING STRING_AGG(uf.USER_ID , '') LIKE ? AND STRING_AGG(uf.USER_ID , '') LIKE ? ); ";
         return new ArrayList<>(jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs, sql),
                 "%" + id + "%", "%" + otherId + "%"));
     }
 
     @Override
     public List<User> getUserFriends(long id) {
-        String sql = "SELECT u.USER_ID, u.USER_NAME , u.EMAIL, u.LOGIN, u.BIRTHDAY FROM USERS u \n" +
-                " WHERE u.USER_ID IN (SELECT uf.FRIEND_ID FROM USER_FRIENDS uf WHERE uf.user_id = ?);";
+        String sql = "SELECT u.USER_ID, u.USER_NAME , u.EMAIL, u.LOGIN, u.BIRTHDAY FROM USERS u " +
+                "WHERE u.USER_ID IN (SELECT uf.FRIEND_ID FROM USER_FRIENDS uf WHERE uf.user_id = ?);";
         return new ArrayList<>(jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs, sql), id));
     }
 
@@ -91,7 +83,6 @@ public class UserDbStorage implements UserStorage {
     }
 
     private User makeUser(ResultSet rs, String sql) throws SQLException {
-
         Set<Long> friends = new HashSet<>();
         if (sql.contains("friends")) {
             Optional<Array> userFriends = Optional.ofNullable(rs.getArray("friends"));
@@ -109,6 +100,5 @@ public class UserDbStorage implements UserStorage {
                 .birthday(rs.getDate("birthday").toLocalDate())
                 .friends(friends)
                 .build();
-
     }
 }
