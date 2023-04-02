@@ -34,7 +34,7 @@ public class EntityIdValidator implements IdCheck {
             log.debug(id + " failed to find id");
             throw new NullPointerException("User id is not found");
         }
-        if (id <= 0 ) {
+        if (id <= 0) {
             log.debug(id + " User is incorrect");
             throw new ValidationException("User id is incorrect");
         }
