@@ -28,7 +28,6 @@ public class FilmDbStorage implements FilmStorage {
     public void add(Film film) {
         String sql = "INSERT INTO FILMS (FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION ,RATING_ID )VALUES (?,?,?,?,?);";
         jdbcTemplate.update(sql, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa().getId());
-        log.info("film created");
         int filmId = jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;", Integer.class);
         film.setId(filmId);
         if (film.getGenres().size() == 0) {
@@ -44,21 +43,12 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update("UPDATE FILMS SET FILM_NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, " +
                         "RATING_ID  = ? WHERE FILM_ID = ?;", film.getName(), film.getDescription(), film.getReleaseDate(),
                 film.getDuration(), film.getMpa().getId(), film.getId());
-        try {
-            boolean isBdGenresEmpty = getFilmsMap().get(film.getId()).getGenres().isEmpty();
-            if (!isBdGenresEmpty) {
-                jdbcTemplate.update("DELETE FROM FILM_GENRES WHERE FILM_ID  = ?;", film.getId());
-            }
-            if (film.getGenres().size() > 0) {
-                log.info("ino" + film.getGenres());
-                for (Genres genres : film.getGenres()) {
-                    jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?);", film.getId(), genres.getId());
-                }
-            } else {
-                jdbcTemplate.update("DELETE FROM FILM_GENRES WHERE FILM_ID  = ?;", film.getId());
-            }
-        } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
+        jdbcTemplate.update("DELETE FROM FILM_GENRES WHERE FILM_ID  = ?;", film.getId());
+        if (film.getGenres().isEmpty()) {
+            return;
+        }
+        for (Genres genres : film.getGenres()) {
+            jdbcTemplate.update("INSERT INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?);", film.getId(), genres.getId());
         }
     }
 
@@ -70,12 +60,12 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getFilmsList() {
-        String sql = "SELECT f.FILM_ID, FILM_NAME,DESCRIPTION,RELEASE_DATE, DURATION,fr.RATING , fr.RATING_ID, \n" +
-                "STRING_AGG(DISTINCT gi.GENRE_ID || '-' || gi.GENRE_NAME, ',') AS genre\n" +
-                "FROM FILMS  AS f\n" +
-                "LEFT JOIN FILM_RATING fr ON f.RATING_ID = fr.RATING_ID \n" +
-                "LEFT JOIN FILM_GENRES fg ON f.FILM_ID = fg.FILM_ID \n" +
-                "LEFT JOIN GENRE_INFO gi ON fg.GENRE_ID = gi.GENRE_ID \n" +
+        String sql = "SELECT f.FILM_ID, FILM_NAME,DESCRIPTION,RELEASE_DATE, DURATION,fr.RATING , fr.RATING_ID, " +
+                "STRING_AGG(DISTINCT gi.GENRE_ID || '-' || gi.GENRE_NAME, ',') AS genre " +
+                "FROM FILMS  AS f " +
+                "LEFT JOIN FILM_RATING fr ON f.RATING_ID = fr.RATING_ID " +
+                "LEFT JOIN FILM_GENRES fg ON f.FILM_ID = fg.FILM_ID " +
+                "LEFT JOIN GENRE_INFO gi ON fg.GENRE_ID = gi.GENRE_ID " +
                 "GROUP BY f.FILM_ID;";
         return new ArrayList<>(jdbcTemplate.query(sql, (rs, rowNum) -> makeFilm(rs, sql)));
     }
@@ -87,28 +77,28 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getTopLikesFilms(int count) {
-        String sql = "SELECT f.FILM_ID, FILM_NAME,DESCRIPTION,RELEASE_DATE, DURATION,fr.RATING , fr.RATING_ID, \n" +
-                "STRING_AGG(DISTINCT gi.GENRE_ID || '-' || gi.GENRE_NAME, ',') AS genre\n" +
-                "FROM FILMS  AS f\n" +
-                "LEFT JOIN FILM_RATING fr ON f.RATING_ID = fr.RATING_ID \n" +
-                "LEFT JOIN FILM_GENRES fg ON f.FILM_ID = fg.FILM_ID \n" +
-                "LEFT JOIN GENRE_INFO gi ON fg.GENRE_ID = gi.GENRE_ID \n" +
-                "WHERE f.FILM_ID IN ( SELECT FILM_ID FROM FILM_LIKES fl\n" +
-                "\t\t\t\t\t GROUP BY fl.FILM_ID\n" +
-                "\t\t\t\t\t ORDER BY COUNT(USER_ID) DESC)\n" +
-                "GROUP BY f.FILM_ID\n" +
+        String sql = "SELECT f.FILM_ID, FILM_NAME,DESCRIPTION,RELEASE_DATE, DURATION,fr.RATING , fr.RATING_ID, " +
+                "STRING_AGG(DISTINCT gi.GENRE_ID || '-' || gi.GENRE_NAME, ',') AS genre " +
+                "FROM FILMS  AS f " +
+                "LEFT JOIN FILM_RATING fr ON f.RATING_ID = fr.RATING_ID " +
+                "LEFT JOIN FILM_GENRES fg ON f.FILM_ID = fg.FILM_ID " +
+                "LEFT JOIN GENRE_INFO gi ON fg.GENRE_ID = gi.GENRE_ID " +
+                "WHERE f.FILM_ID IN ( SELECT FILM_ID FROM FILM_LIKES fl " +
+                "GROUP BY fl.FILM_ID " +
+                "ORDER BY COUNT(USER_ID) DESC) " +
+                "GROUP BY f.FILM_ID " +
                 "LIMIT ?";
         return new ArrayList<>(jdbcTemplate.query(sql, (rs, rowNum) -> makeFilm(rs, sql), count));
     }
 
     @Override
     public Film getFilmById(long id) {
-        String sql = "SELECT f.FILM_ID, FILM_NAME,DESCRIPTION,RELEASE_DATE, DURATION,fr.RATING , fr.RATING_ID, \n" +
-                "STRING_AGG(DISTINCT gi.GENRE_ID || '-' || gi.GENRE_NAME, ',') AS genre\n" +
-                "FROM FILMS  AS f\n" +
-                "LEFT JOIN FILM_RATING fr ON f.RATING_ID = fr.RATING_ID \n" +
-                "LEFT JOIN FILM_GENRES fg ON f.FILM_ID = fg.FILM_ID \n" +
-                "LEFT JOIN GENRE_INFO gi ON fg.GENRE_ID = gi.GENRE_ID \n" +
+        String sql = "SELECT f.FILM_ID, FILM_NAME,DESCRIPTION,RELEASE_DATE, DURATION,fr.RATING , fr.RATING_ID, " +
+                "STRING_AGG(DISTINCT gi.GENRE_ID || '-' || gi.GENRE_NAME, ',') AS genre " +
+                "FROM FILMS  AS f " +
+                "LEFT JOIN FILM_RATING fr ON f.RATING_ID = fr.RATING_ID " +
+                "LEFT JOIN FILM_GENRES fg ON f.FILM_ID = fg.FILM_ID " +
+                "LEFT JOIN GENRE_INFO gi ON fg.GENRE_ID = gi.GENRE_ID " +
                 "WHERE f.FILM_ID = ? ;";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeFilm(rs, sql), id);
     }
