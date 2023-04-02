@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.film.Genres;
 import ru.yandex.practicum.filmorate.service.GenresService;
 
@@ -29,10 +28,6 @@ public class GenresController {
 
     @GetMapping("/{id}")
     public Genres getGenreById(@PathVariable long id) {
-        try {
-            return genresService.getGenreById((int) id);
-        } catch (NullPointerException e) {
-            throw new ValidationException(e.getMessage());
-        }
+        return genresService.getGenreById((int) id);
     }
 }

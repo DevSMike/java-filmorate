@@ -28,11 +28,7 @@ public class MpaController {
 
     @GetMapping("/{id}")
     public Mpa getMpaById(@Valid @PathVariable long id) {
-        try {
-            return mpaService.getMpaById((int) id);
-        } catch (NullPointerException e) {
-            throw new NullPointerException(e.getMessage());
-        }
-
+        return mpaService.getMpaById((int) id);
     }
 }
+

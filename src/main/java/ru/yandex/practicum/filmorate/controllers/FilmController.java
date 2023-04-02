@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import java.util.List;
 
 @RestController
@@ -30,11 +29,7 @@ public class FilmController {
 
     @PutMapping()
     public Film updateFilm(@Valid @RequestBody Film film) {
-        try {
-            service.updateFilm(film);
-        } catch (ValidationException e) {
-            throw new NullPointerException(e.getMessage());
-        }
+        service.updateFilm(film);
         return film;
     }
 
@@ -45,29 +40,17 @@ public class FilmController {
 
     @GetMapping("/{id}")
     public Film getFilmById(@PathVariable long id) {
-        try {
-            return service.getFilmById(id);
-        } catch (ValidationException e) {
-            throw new NullPointerException(e.getMessage());
-        }
+        return service.getFilmById(id);
     }
 
     @PutMapping("/{id}/like/{userId}")
     public void addLikeToFilm(@PathVariable long id, @PathVariable long userId) {
-        try {
-            service.addLikeToFilm(id, userId);
-        } catch (ValidationException e) {
-            throw new NullPointerException(e.getMessage());
-        }
+        service.addLikeToFilm(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public void deleteLikeToFilm(@PathVariable long id, @PathVariable long userId) {
-        try {
-            service.deleteFilmLike(id, userId);
-        } catch (ValidationException e) {
-            throw new NullPointerException(e.getMessage());
-        }
+        service.deleteFilmLike(id, userId);
     }
 
     @GetMapping("/popular")
