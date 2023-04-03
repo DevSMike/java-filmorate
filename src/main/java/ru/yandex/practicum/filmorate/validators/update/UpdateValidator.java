@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.validators.update;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -37,7 +37,7 @@ public class UpdateValidator implements ConstraintValidator<Update, Object> {
                 }
             }
             case "user": {
-                User user = (User)o;
+                User user = (User) o;
                 if (userStorage.getUsersMap().containsKey(user.getId())) {
                     return true;
                 } else {
@@ -51,3 +51,4 @@ public class UpdateValidator implements ConstraintValidator<Update, Object> {
         return false;
     }
 }
+

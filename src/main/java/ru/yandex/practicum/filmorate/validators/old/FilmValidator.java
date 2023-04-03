@@ -1,36 +1,35 @@
-package ru.yandex.practicum.filmorate.validators;
+package ru.yandex.practicum.filmorate.validators.old;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.time.LocalDate;
-import java.util.Map;
 
+@RequiredArgsConstructor
 public class FilmValidator {
 
     private static final int MAX_DESCRIPTION_LENGTH = 200;
     private static final LocalDate FIRST_MOVIE_RELEASE = LocalDate.of(1895, 12, 28);
     private static final Logger log = LoggerFactory.getLogger(FilmValidator.class);
+    private final FilmStorage filmStorage;
 
-    public static void validate (Film film) throws ValidationException {
+    public static void validate(Film film) throws ValidationException {
         validateName(film);
         validateDescription(film);
         validateReleaseDate(film);
         validateMovieDuration(film);
     }
 
-    public static void validatePutMethod(Film film, Map<Long, Film> films) {
-        validateId(film, films);
-    }
-
-    private static void validateId(Film film, Map<Long, Film> films) {
-        if (!films.containsKey(film.getId())) {
-            log.debug(film + " failed validationId");
+    public void validateId(long id) {
+        if (!filmStorage.getFilmsMap().containsKey(id)) {
+            log.debug(id + " failed validationId");
             throw new ValidationException("Film id is incorrect");
         }
-        log.debug(film + " passed validationId");
+        log.debug(id + " passed validationId");
     }
 
     private static void validateName(Film film) {

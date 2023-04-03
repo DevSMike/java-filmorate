@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.validators.username;
 
 import ru.yandex.practicum.filmorate.model.User;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

@@ -1,17 +1,17 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
-@ControllerAdvice
+@RestControllerAdvice()
 public class ErrorHandler {
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleValidationException(ValidationException e) {
         return new ErrorResponse(String.format("Validation Error: %s ", e.getMessage()));
     }
@@ -25,6 +25,6 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleAnyException(Exception e) {
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse("Произошло непредвиденное исключение: " + e.getMessage());
     }
 }

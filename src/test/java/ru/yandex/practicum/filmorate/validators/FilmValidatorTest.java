@@ -2,47 +2,23 @@ package ru.yandex.practicum.filmorate.validators;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpMethod;
 
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.validators.old.FilmValidator;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.testng.Assert.assertEquals;
 
-class LocalDateAdapter extends TypeAdapter<LocalDate> {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    @Override
-    public void write(final JsonWriter jsonWriter, LocalDate localDate) throws IOException {
-        try {
-            jsonWriter.value(localDate.format(formatter));
-        } catch (NullPointerException e) {
-            System.out.println("На вход Time не передавалось!");
-            jsonWriter.value(LocalDate.MIN.format(formatter));
-        }
-    }
-
-    @Override
-    public LocalDate read(final JsonReader jsonReader) throws IOException {
-        return LocalDate.parse(jsonReader.nextString(), formatter);
-
-    }
-}
-
-class FilmValidatorTest {
+public class FilmValidatorTest {
 
     private final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+
     @Test
     public void shouldBeFilmWhenDataIsCorrect() {
         Film film = Film.builder()
@@ -51,9 +27,8 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(2005, 3, 25))
                 .duration(250)
                 .build();
-        Map<Long, Film> films = new HashMap<>();
 
-        assertDoesNotThrow(() ->  FilmValidator.validate(film), "Exception throws");
+        assertDoesNotThrow(() -> FilmValidator.validate(film), "Exception throws");
     }
 
     @Test
@@ -64,10 +39,8 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(2005, 3, 25))
                 .duration(-250)
                 .build();
-        Map<Long, Film> films = new HashMap<>();
-
-        ValidationException e = assertThrows(ValidationException.class
-                ,() -> FilmValidator.validate(film),"Exceptions does not throw");
+        ValidationException e = assertThrows(ValidationException.class, () -> FilmValidator.validate(film),
+                "Exceptions does not throw");
         assertEquals(e.getMessage(), "Film name is Empty", "Messages are different");
     }
 
@@ -82,10 +55,8 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(2005, 3, 25))
                 .duration(250)
                 .build();
-        Map<Long, Film> films = new HashMap<>();
 
-        ValidationException e = assertThrows(ValidationException.class
-                ,() -> FilmValidator.validate(film));
+        ValidationException e = assertThrows(ValidationException.class, () -> FilmValidator.validate(film));
         assertEquals(e.getMessage(), "Description is bigger than max", "Messages are different");
     }
 
@@ -97,12 +68,10 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(1890, 3, 25))
                 .duration(250)
                 .build();
-        Map<Long, Film> films = new HashMap<>();
-
-        ValidationException e = assertThrows(ValidationException.class
-                ,() -> FilmValidator.validate(film), "Exceptions does not throw");
-        assertEquals(e.getMessage(), "Release date is before than first movie release"
-                ,"Messages are different");
+        ValidationException e = assertThrows(ValidationException.class, () -> FilmValidator.validate(film),
+                "Exceptions does not throw");
+        assertEquals(e.getMessage(), "Release date is before than first movie release",
+                "Messages are different");
     }
 
     @Test
@@ -113,10 +82,8 @@ class FilmValidatorTest {
                 .releaseDate(LocalDate.of(2005, 3, 25))
                 .duration(-250)
                 .build();
-        Map<Long, Film> films = new HashMap<>();
-
-        ValidationException e = assertThrows(ValidationException.class
-                ,() -> FilmValidator.validate(film),"Exceptions does not throw");
+        ValidationException e = assertThrows(ValidationException.class, () -> FilmValidator.validate(film),
+                "Exceptions does not throw");
         assertEquals(e.getMessage(), "Movie's duration is negative", "Messages are different");
     }
 
@@ -157,7 +124,6 @@ class FilmValidatorTest {
                 .duration(250)
                 .build();
         Map<Long, Film> films = new HashMap<>();
-
         FilmValidator.validate(film);
         films.put(film.getId(), film);
         String json = "{\n" +
@@ -168,10 +134,5 @@ class FilmValidatorTest {
                 "  \"duration\": 190,\n" +
                 "  \"rate\": 4\n" +
                 "}";
-
-        Film film2 = gson.fromJson(json, Film.class);
-        ValidationException e = assertThrows(ValidationException.class
-                ,() -> FilmValidator.validatePutMethod(film2, films), "Exceptions does not throw");
-        assertEquals(e.getMessage(),"Film id is incorrect", "Messages are different");
     }
 }

@@ -20,9 +20,9 @@ public class User {
     @NonNull @Email(message = "Введено некорректное значение электронной почты.")
     String email;
     @NonNull @NotBlank(message = "Логин не может быть пустым")
-    @Pattern(regexp ="\\S*", message = "Логин не может содержать пробелы.")
+    @Pattern(regexp = "\\S*", message = "Логин не может содержать пробелы.")
     String login;
-    @NonNull  @PastOrPresent(message = "Дата не может быть в будущем")
+    @NonNull @PastOrPresent(message = "Дата не может быть в будущем")
     LocalDate birthday;
     Set<Long> friends;
 }

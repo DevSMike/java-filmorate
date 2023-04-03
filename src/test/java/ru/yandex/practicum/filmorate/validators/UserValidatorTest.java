@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.validators.old.UserValidator;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -21,11 +22,9 @@ class UserValidatorTest {
         User user = User.builder()
                 .email("mrmike@mail.ru")
                 .login("mike123")
-                .birthday(LocalDate.of(2002,6,18))
+                .birthday(LocalDate.of(2002, 6, 18))
                 .build();
-        Map<Long, User> users= new HashMap<>();
-
-        assertDoesNotThrow(() ->  UserValidator.validate(user), "Exception throws");
+        assertDoesNotThrow(() -> UserValidator.validate(user), "Exception throws");
     }
 
     @Test
@@ -33,12 +32,10 @@ class UserValidatorTest {
         User user = User.builder()
                 .email("mrmike@mail.ru")
                 .login("mi ke")
-                .birthday(LocalDate.of(2002,6,18))
+                .birthday(LocalDate.of(2002, 6, 18))
                 .build();
-        Map<Long, User> users= new HashMap<>();
-
-        ValidationException e = assertThrows(ValidationException.class
-                ,() -> UserValidator.validate(user),"Exceptions does not throw");
+        ValidationException e = assertThrows(ValidationException.class, () -> UserValidator.validate(user),
+                "Exceptions does not throw");
         assertEquals(e.getMessage(), "Login is incorrect", "Messages are different");
     }
 
@@ -47,12 +44,10 @@ class UserValidatorTest {
         User user = User.builder()
                 .email("mrmike@mail.ru")
                 .login("mike")
-                .birthday(LocalDate.of(2052,6,18))
+                .birthday(LocalDate.of(2052, 6, 18))
                 .build();
-        Map<Long, User> users= new HashMap<>();
-
-        ValidationException e = assertThrows(ValidationException.class
-                ,() -> UserValidator.validate(user));
+        ValidationException e = assertThrows(ValidationException.class,
+                () -> UserValidator.validate(user));
         assertEquals(e.getMessage(), "BirthDate is incorrect", "Messages are different");
     }
 
@@ -61,13 +56,11 @@ class UserValidatorTest {
         User user = User.builder()
                 .email("mrmike.cmail.ru")
                 .login("mike")
-                .birthday(LocalDate.of(2002,6,18))
+                .birthday(LocalDate.of(2002, 6, 18))
                 .build();
-        Map<Long, User> users= new HashMap<>();
-
-        ValidationException e = assertThrows(ValidationException.class
-                ,() -> UserValidator.validate(user), "Exceptions does not throw");
-        assertEquals(e.getMessage(), "Email is incorrect","Messages are different");
+        ValidationException e = assertThrows(ValidationException.class,
+                () -> UserValidator.validate(user), "Exceptions does not throw");
+        assertEquals(e.getMessage(), "Email is incorrect", "Messages are different");
     }
 
     @Test
@@ -75,13 +68,10 @@ class UserValidatorTest {
         User user = User.builder()
                 .email("mrmike@mail.ru")
                 .login("mike")
-                .birthday(LocalDate.of(2002,6,18))
+                .birthday(LocalDate.of(2002, 6, 18))
                 .build();
-        Map<Long, User> users= new HashMap<>();
-
         UserValidator.validate(user);
         assertEquals(user.getLogin(), user.getName());
-
     }
 
     @Test
@@ -89,10 +79,9 @@ class UserValidatorTest {
         User user = User.builder()
                 .email("mrmike@mail.ru")
                 .login("mike")
-                .birthday(LocalDate.of(2002,6,18))
+                .birthday(LocalDate.of(2002, 6, 18))
                 .build();
-        Map<Long, User> users= new HashMap<>();
-
+        Map<Long, User> users = new HashMap<>();
         UserValidator.validate(user);
         users.put(user.getId(), user);
         String json = "{\n" +
@@ -102,10 +91,8 @@ class UserValidatorTest {
                 "  \"email\": \"mail@yandex.ru\",\n" +
                 "  \"birthday\": \"1976-09-20\"\n" +
                 "}";
-
         User user2 = gson.fromJson(json, User.class);
         UserValidator.validate(user2);
-
         users.put(user2.getId(), user2);
         assertEquals(user2.getName(), users.get(user2.getId()).getName(), "Objects are different");
     }
@@ -115,10 +102,9 @@ class UserValidatorTest {
         User user = User.builder()
                 .email("mrmike@mail.ru")
                 .login("mike")
-                .birthday(LocalDate.of(2002,6,18))
+                .birthday(LocalDate.of(2002, 6, 18))
                 .build();
-        Map<Long, User> users= new HashMap<>();
-
+        Map<Long, User> users = new HashMap<>();
         UserValidator.validate(user);
         users.put(user.getId(), user);
         String json = "{\n" +
@@ -128,10 +114,5 @@ class UserValidatorTest {
                 "  \"email\": \"mail@yandex.ru\",\n" +
                 "  \"birthday\": \"1976-09-20\"\n" +
                 "}";
-
-        User user2 = gson.fromJson(json, User.class);
-        ValidationException e = assertThrows(ValidationException.class
-                ,() -> UserValidator.validatePutMethod(user2, users), "Exceptions does not throw");
-        assertEquals(e.getMessage(),"Id is incorrect", "Messages are different");
     }
 }
