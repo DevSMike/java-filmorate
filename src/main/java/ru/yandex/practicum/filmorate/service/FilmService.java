@@ -48,7 +48,7 @@ public class FilmService {
     }
 
     public List<Film> getTopLikesFilms(int count, int genreId, int year) {
-        if (genreId != 0 ) {
+        if (genreId != 0) {
             entityIdValidator.checkGenreId(genreId);
         }
         return filmStorage.getTopLikesFilms(count, genreId, year);
