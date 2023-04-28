@@ -27,9 +27,9 @@ public class UserService {
         userStorage.update(user);
     }
 
-    public void deleteUser(User user) {
-        entityIdValidator.checkUserId(user.getId());
-        userStorage.delete(user);
+    public void deleteUser(long id) {
+        entityIdValidator.checkUserId(id);
+        userStorage.delete(userStorage.getUserById(id));
     }
 
     public User getUserById(long id) {
@@ -63,5 +63,4 @@ public class UserService {
         entityIdValidator.checkUserId(otherId);
         return userStorage.getCommonFriends(id, otherId);
     }
-
 }
