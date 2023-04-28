@@ -48,9 +48,9 @@ public class EntityIdValidator implements IdCheck {
 
     @Override
     public void checkGenreId(int id) {
-        if (!genresStorage.getAllGenres().stream().collect(Collectors.toMap(Genres::getId, x->x)).containsKey(id)) {
-           log.debug(id + "failed to find genre id");
-           throw new NullPointerException("Genre id is not found");
+        if (!genresStorage.getAllGenres().stream().collect(Collectors.toMap(Genres::getId, x -> x)).containsKey(id)) {
+            log.debug(id + "failed to find genre id");
+            throw new NullPointerException("Genre id is not found");
         }
         if (id < 0) {
             throw new ValidationException(id + " Genre id is incorrect");
