@@ -166,7 +166,7 @@ class FilmDbStorageTest {
         long filmId = jdbcTemplate.queryForObject("SELECT FILM_ID FROM  FILMS ORDER BY FILM_ID DESC LIMIT 1;",
                 Integer.class);
         filmLikes.addLikeToFilm(filmId, userId);
-        List<Film> topLikes = filmStorage.getTopLikesFilms(1);
+        List<Film> topLikes = filmStorage.getTopLikesFilms(1, 0,0);
         assertEquals(topLikes.get(0).getName(), filmTopLikes.getName(), "names are diff");
     }
 

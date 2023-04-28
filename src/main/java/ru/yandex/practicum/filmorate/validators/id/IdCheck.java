@@ -5,4 +5,6 @@ public interface IdCheck {
     void checkFilmId(long id);
 
     void checkUserId(long id);
+
+    void checkGenreId(int id);
 }
