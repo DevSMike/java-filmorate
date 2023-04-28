@@ -33,6 +33,7 @@ public class Film {
     @NonNull
     Mpa mpa;
     LinkedHashSet<Genres> genres;
+    Set<Director> directors;
 
     public int getLikesLength() {
         return likes.size();
