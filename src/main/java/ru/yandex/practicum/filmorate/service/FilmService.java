@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.validators.id.EntityIdValidator;
 
 import java.util.*;
 
+
 @Service
 @RequiredArgsConstructor
 public class FilmService {
@@ -16,6 +17,7 @@ public class FilmService {
     private final FilmStorage filmStorage;
     private final FilmLikes filmLikesStorage;
     private final EntityIdValidator entityIdValidator;
+
 
     public void addFilm(Film film) {
         filmStorage.add(film);
@@ -31,16 +33,12 @@ public class FilmService {
         return filmStorage.getFilmById(id);
     }
 
-    public void deleteFilm(Film film) {
-        filmStorage.delete(film);
+    public void deleteFilm(long id) {
+        filmStorage.delete(filmStorage.getFilmById(id));
     }
 
     public List<Film> getFilmsInList() {
         return filmStorage.getFilmsList();
-    }
-
-    public Map<Long, Film> getFilmsInMap() {
-        return filmStorage.getFilmsMap();
     }
 
     public void addLikeToFilm(long filmId, long userId) {
@@ -49,11 +47,11 @@ public class FilmService {
         filmLikesStorage.addLikeToFilm(filmId, userId);
     }
 
-    public List<Film> getTopLikesFilms(int count) {
-        if (filmStorage.getTopLikesFilms(count).isEmpty()) {
-            return filmStorage.getFilmsList();
+    public List<Film> getTopLikesFilms(int count, int genreId, int year) {
+        if (genreId != 0 ) {
+            entityIdValidator.checkGenreId(genreId);
         }
-        return filmStorage.getTopLikesFilms(count);
+        return filmStorage.getTopLikesFilms(count, genreId, year);
     }
 
     public void deleteFilmLike(long filmId, long userId) {

@@ -55,7 +55,6 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public void delete(Film film) {
-        jdbcTemplate.update("DELETE FROM FILM_GENRES WHERE FILM_ID = ? ", film.getId());
         jdbcTemplate.update("DELETE FROM FILMS where FILM_ID = ? ", film.getId());
     }
 
@@ -77,19 +76,31 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getTopLikesFilms(int count) {
-        String sql = "SELECT f.FILM_ID, FILM_NAME,DESCRIPTION,RELEASE_DATE, DURATION,fr.RATING , fr.RATING_ID, " +
-                "STRING_AGG(DISTINCT gi.GENRE_ID || '-' || gi.GENRE_NAME, ',') AS genre " +
-                "FROM FILMS  AS f " +
-                "LEFT JOIN FILM_RATING fr ON f.RATING_ID = fr.RATING_ID " +
-                "LEFT JOIN FILM_GENRES fg ON f.FILM_ID = fg.FILM_ID " +
-                "LEFT JOIN GENRE_INFO gi ON fg.GENRE_ID = gi.GENRE_ID " +
-                "WHERE f.FILM_ID IN ( SELECT FILM_ID FROM FILM_LIKES fl " +
-                "GROUP BY fl.FILM_ID " +
-                "ORDER BY COUNT(USER_ID) DESC) " +
-                "GROUP BY f.FILM_ID " +
-                "LIMIT ?";
-        return new ArrayList<>(jdbcTemplate.query(sql, (rs, rowNum) -> makeFilm(rs, sql), count));
+    public List<Film> getTopLikesFilms(int count, int genreId, int year) {
+        String sql = "SELECT f.FILM_ID, FILM_NAME,DESCRIPTION,RELEASE_DATE, DURATION,fr.RATING , fr.RATING_ID, STRING_AGG(DISTINCT gi.GENRE_ID || '-' || gi.GENRE_NAME, ',') AS genre,\n" +
+                "STRING_AGG(DISTINCT fl.USER_ID, ',') AS user_likes, LENGTH (STRING_AGG(DISTINCT fl.USER_ID,'' )) AS likes_count\n" +
+                "FROM FILMS  AS f\n" +
+                "LEFT JOIN FILM_RATING fr ON f.RATING_ID = fr.RATING_ID \n" +
+                "LEFT JOIN FILM_GENRES fg ON f.FILM_ID = fg.FILM_ID \n" +
+                "LEFT JOIN GENRE_INFO gi ON fg.GENRE_ID = gi.GENRE_ID \n" +
+                "LEFT JOIN FILM_LIKES fl ON f.FILM_ID = fl.FILM_ID\n";
+        String topLimit = "GROUP BY f.FILM_ID ";
+        List<Integer> keys = new LinkedList<>();
+        if (genreId != 0) {
+            topLimit += "HAVING GENRE LIKE CONCAT('%', ?, '%') ";
+            keys.add(genreId);
+        }
+        if (genreId != 0 && year != 0) {
+            topLimit += " AND EXTRACT(YEAR FROM f.RELEASE_DATE) = ? ";
+            keys.add(year);
+        }
+        if (genreId == 0 && year != 0) {
+            topLimit += " HAVING EXTRACT(YEAR FROM f.RELEASE_DATE) = ? ";
+            keys.add(year);
+        }
+        topLimit += "ORDER BY likes_count DESC LIMIT ? ";
+        keys.add(count);
+        return jdbcTemplate.query(sql + topLimit, (rs, rowNum) -> makeFilm(rs, sql), keys.toArray());
     }
 
     @Override
@@ -131,6 +142,7 @@ public class FilmDbStorage implements FilmStorage {
                 .mpa(new Mpa(rs.getInt("rating_id"), rs.getString("rating")))
                 .genres(listOfGenres)
                 .likes(setLikes)
+                .directors(new HashSet<>())
                 .build();
     }
 }

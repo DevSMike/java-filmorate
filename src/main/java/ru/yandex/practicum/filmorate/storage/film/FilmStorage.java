@@ -17,7 +17,7 @@ public interface FilmStorage {
 
     Map<Long, Film> getFilmsMap();
 
-    List<Film> getTopLikesFilms(int count);
+    List<Film> getTopLikesFilms(int count, int genreId, int year);
 
     Film getFilmById(long id);
 }
