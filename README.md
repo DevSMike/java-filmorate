@@ -42,7 +42,7 @@ Filmorate is a social network that helps users choose movies based on what their
 
 To use this API, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/your-username/filmorate-api.git`
+1. Clone the repository: `git clone https://github.com/DevSMike/java-filmorate.git`
 2. Navigate to the project directory: `cd filmorate-api`
 3. Install any required dependencies: `npm install`
 
