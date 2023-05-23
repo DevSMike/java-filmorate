@@ -59,7 +59,16 @@ WHERE film_id = (  SELECT film_id
                    ORDER BY COUNT(user_id) desc
                    LIMIT 1);
 ```
+## Development Stack
 
+The project is developed using the following technologies:
+
+- Java 11
+- Spring Boot
+- JDBC
+- Maven
+- Lambok
+- JUnit
 
 ## Contributing
 
