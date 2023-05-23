@@ -38,6 +38,10 @@ Filmorate is a social network that helps users choose movies based on what their
 - Get an age rating by ID
 - Get all age ratings
 
+## Testing
+
+The functionality has been tested using JUnit 5 in the `tests` package.
+
 ## Installation
 
 To use this API, follow these steps:
