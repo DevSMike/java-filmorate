@@ -73,6 +73,7 @@ The project is developed using the following technologies:
 - Maven
 - Lambok
 - JUnit
+- PostgreSQL
 
 ## Contributing
 
